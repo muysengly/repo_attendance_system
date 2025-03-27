@@ -2,4 +2,4 @@
 
 call venv\Scripts\activate
 
-start /min cmd /c python 020.pyc
+start /min cmd /c python 020.py

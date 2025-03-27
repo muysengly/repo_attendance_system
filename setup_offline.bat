@@ -22,7 +22,7 @@ if not exist "result" (
 
 
 @REM create a folder data
-if not exist "data" (
-    mkdir "data"
+if not exist "database" (
+    mkdir "database"
 )
 

@@ -1,5 +1,6 @@
 albucore==0.0.23
 albumentations==2.0.5
+altgraph==0.17.4
 annotated-types==0.7.0
 anyio==4.9.0
 argon2-cffi==23.1.0
@@ -83,6 +84,7 @@ overrides==7.7.0
 packaging==24.2
 pandocfilters==1.5.1
 parso==0.8.4
+pefile==2023.2.7
 pillow==11.1.0
 pillow_heif==0.22.0
 platformdirs==4.3.7
@@ -96,6 +98,8 @@ pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2
 Pygments==2.19.1
+pyinstaller==6.12.0
+pyinstaller-hooks-contrib==2025.2
 pyparsing==3.2.1
 PyQt5==5.15.11
 PyQt5-Qt5==5.15.2
@@ -104,9 +108,11 @@ pyreadline3==3.5.4
 python-dateutil==2.9.0.post0
 python-json-logger==3.3.0
 pywin32==310
+pywin32-ctypes==0.2.3
 pywinpty==2.0.15
 PyYAML==6.0.2
 pyzmq==26.3.0
+rawpy==0.24.0
 referencing==0.36.2
 requests==2.32.3
 rfc3339-validator==0.1.4

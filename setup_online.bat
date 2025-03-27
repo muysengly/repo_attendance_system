@@ -16,7 +16,7 @@ python.exe -m pip install --upgrade pip
 
 
 @REM install dependencies
-pip install setuptools jupyter opencv-python insightface onnxruntime pyqt5 pillow-heif
+pip install setuptools jupyter opencv-python insightface onnxruntime pyqt5 pillow-heif rawpy
 
 
 @REM create a folder result
@@ -26,8 +26,8 @@ if not exist "result" (
 
 
 @REM create a folder data
-if not exist "data" (
-    mkdir "data"
+if not exist "database" (
+    mkdir "database"
 )
 
 
