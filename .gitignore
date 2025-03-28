@@ -25,5 +25,6 @@ resource/*.py
 **/*.py
 **/*.ui
 
+.gitignore
 setup_offline_make.bat
 setup_offline.bat
