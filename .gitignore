@@ -9,6 +9,8 @@ setup_offline/
 venv/
 
 resource/windows/
+resource/*.ui
+resource/*.py
 
 .gitignore
 
@@ -17,5 +19,4 @@ resource/windows/
 *.py
 
 **/*.ipynb
-**/*.ui
 **/*.py
