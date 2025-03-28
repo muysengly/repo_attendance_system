@@ -2,4 +2,4 @@
 
 call venv\Scripts\activate
 
-start /min cmd /c python app.py
+start /min cmd /c python app.pyc
