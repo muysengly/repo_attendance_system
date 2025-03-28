@@ -1,14 +1,16 @@
 __backup__/
 __pycache__/
 __tmp__/
+
 .git/
 .vscode/
-data/
-models/
+
 setup_offline/
 venv/
 
 resource/windows/
+
+.gitignore
 
 *.ipynb
 *.ui
