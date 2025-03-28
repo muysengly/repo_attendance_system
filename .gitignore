@@ -18,8 +18,9 @@ resource/*.ui
 resource/*.py
 
 *.ipynb
-*.ui
 *.py
+*.ui
 
 **/*.ipynb
 **/*.py
+**/*.ui
