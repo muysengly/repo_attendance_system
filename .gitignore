@@ -24,3 +24,6 @@ resource/*.py
 **/*.ipynb
 **/*.py
 **/*.ui
+
+setup_offline_make.bat
+setup_offline.bat
