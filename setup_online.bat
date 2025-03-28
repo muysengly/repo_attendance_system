@@ -16,7 +16,7 @@ python.exe -m pip install --upgrade pip
 
 
 @REM install dependencies
-pip install setuptools jupyter opencv-python insightface onnxruntime pyqt5 pillow-heif rawpy
+pip install setuptools jupyter opencv-python insightface onnxruntime pyqt5
 
 
 @REM create a folder result

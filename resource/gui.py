@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'resource/021.ui'
+# Form implementation generated from reading ui file 'resource/022.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -122,6 +122,12 @@ class Ui_MainWindow(object):
         self.label_logo_gtr.setFrameShape(QtWidgets.QFrame.Box)
         self.label_logo_gtr.setAlignment(QtCore.Qt.AlignCenter)
         self.label_logo_gtr.setObjectName("label_logo_gtr")
+        self.pushButton_capture = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_capture.setGeometry(QtCore.QRect(260, 605, 100, 40))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.pushButton_capture.setFont(font)
+        self.pushButton_capture.setObjectName("pushButton_capture")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -140,6 +146,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Threshold [%]:"))
         self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan. 🙏"))
         self.label_logo_gtr.setText(_translate("MainWindow", "LOGO"))
+        self.pushButton_capture.setText(_translate("MainWindow", "Capture"))
 
 
 if __name__ == "__main__":
