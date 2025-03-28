@@ -1,6 +1,5 @@
 __backup__/
 __pycache__/
-__resource__/
 __tmp__/
 .git/
 .vscode/
@@ -9,10 +8,12 @@ models/
 setup_offline/
 venv/
 
-models/buffalo_l/
-models/buffalo_s/
-models/buffalo_l.zip
-models/buffalo_s.zip
+resource/windows/
 
 *.ipynb
 *.ui
+*.py
+
+**/*.ipynb
+**/*.ui
+**/*.py
