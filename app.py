@@ -1,27 +1,21 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[7]:
-
-
+# %%
 ########## import library ##########
 import os
 import re
-import time
 import csv
 import cv2
+import time
 import pickle
-import numpy as np
-
-import re
 import requests
+
+import numpy as np
 
 from datetime import date
 from insightface.app import FaceAnalysis
 
+from PyQt5.QtGui import QImage, QPixmap, QIcon
 from PyQt5.QtCore import QStringListModel, QTimer, Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
-from PyQt5.QtGui import QImage, QPixmap, QIcon
 
 from gui import Ui_MainWindow
 
@@ -29,9 +23,9 @@ from gui import Ui_MainWindow
 
 
 ########## __________ ##########
+os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
@@ -41,36 +35,28 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 # jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
 
-
-# In[8]:
-
-
+# %%
 ########## initial variable ##########
-
 version = "1.24"
 
-group_student_files = []  # list of student files
-group_student_embs = []  # list of student embeddings
-all_dirs_embs = []  # list of all embeddings
 group_name = []  # group name
+all_dirs_embs = []  # list of all embeddings
+group_student_embs = []  # list of student embeddings
+group_student_files = []  # list of student files
 
 similarity_threshold = pickle.load(open("./resource/similarity_threshold.pkl", "rb"))
 number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[9]:
-
-
+# %%
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[10]:
-
-
+# %%
 def get_face_embedding(input):
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
     if len(faces) == 0:
@@ -137,6 +123,7 @@ def gen_group_student_embs(input):
     return group_student_embs
 
 
+# %%
 def list_camera_devices():
     index = 0
     cameras = []
@@ -154,7 +141,7 @@ cameras = list_camera_devices()
 cap = cv2.VideoCapture(0)
 
 
-# NOTE: need to fix because it load all data every time
+# %%
 def load_database():
 
     global group_student_files, group_student_embs
@@ -194,9 +181,7 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# In[11]:
-
-
+# %%
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
@@ -347,9 +332,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[12]:
-
-
+# %%
 ########## init objects ##########
 cap = cv2.VideoCapture(0)
 app = QApplication([])
@@ -472,7 +455,6 @@ win.comboBox_group.currentIndexChanged.connect(f_group_change)
 def f_threshold_change():
     global similarity_threshold
     similarity_threshold = win.spinBox_threshold.value() / 100
-    pickle.dump(similarity_threshold, open("resource/similarity_threshold.pkl", "wb"))
 
 
 win.spinBox_threshold.setValue(int(similarity_threshold * 100))
@@ -523,11 +505,23 @@ win.pushButton_capture.clicked.connect(f_capture)
 ########## __________ ##########
 def f_update():
 
-    app_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/app.py")
-    app_text = app_url.text
+    # condition for no internet connection
+    try:
+        app_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/app.py")
+        app_text = app_url.text
 
-    gui_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/gui.py")
-    gui_text = gui_url.text
+        gui_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/gui.py")
+        gui_text = gui_url.text
+    except requests.exceptions.RequestException as e:
+        msg = QMessageBox()
+        msg.setWindowTitle("Error")
+        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setIcon(QMessageBox.Icon.Critical)
+        msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
+        msg.setText("Failed to fetch update files. \nPlease check your internet connection.")
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec_()
+        return
 
     pattern = r'version = "(\d+\.\d+)"'
     match = re.search(pattern, app_text)
@@ -535,6 +529,7 @@ def f_update():
     print(git_version)
 
     curr_text = open("app.py", "r", encoding="utf-8").read()
+    pattern = r'version = "(\d+\.\d+)"'
     match = re.search(pattern, curr_text)
     my_version = match.group(1)
     print(my_version)
@@ -591,6 +586,8 @@ app.exec()
 ########## __________ ##########
 
 ########## auto save ##########
+pickle.dump(similarity_threshold, open("resource/similarity_threshold.pkl", "wb"))
+
 if win.data_attd != []:
 
     tmp_col_data = win.col_data.copy()
@@ -611,6 +608,3 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
-
-
-# In[ ]:
