@@ -20,18 +20,18 @@ pip install setuptools jupyter opencv-python insightface onnxruntime pyqt5
 
 
 @REM create a folder result
-if not exist "result" (
-    mkdir "result"
-)
+@REM if not exist "result" (
+@REM     mkdir "result"
+@REM )
 
 
 @REM create a folder data
-if not exist "database" (
-    mkdir "database"
-)
+@REM if not exist "database" (
+@REM     mkdir "database"
+@REM )
 
 
 @REM download the model
-if not exist "models" (
-    python -c "import os; from insightface.app import FaceAnalysis; FaceAnalysis(name='buffalo_sc', root=os.getcwd(), providers=['CPUExecutionProvider'])"
-)
+@REM if not exist "models" (
+@REM     python -c "import os; from insightface.app import FaceAnalysis; FaceAnalysis(name='buffalo_sc', root=os.getcwd(), providers=['CPUExecutionProvider'])"
+@REM )
