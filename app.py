@@ -26,9 +26,9 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 ########## __________ ##########
-os.system("pyuic5 -x ./resource/022.ui -o ./resource/gui.py")
-from resource.gui import Ui_MainWindow
-
+# pyuic5 -x ./resource/022.ui -o ./resource/gui.py
+# os.system("pyuic5 -x ./resource/022.ui -o ./resource/gui.py")
+# from resource.gui import Ui_MainWindow
 ########## __________ ##########
 
 
@@ -146,7 +146,7 @@ cap = cv2.VideoCapture(0)
 # NOTE: need to fix because it load all data every time
 def load_database():
 
-    global group_student_files, group_student_embs, group_name, all_dirs_embs
+    global group_student_files, group_student_embs
 
     group_student_files = pickle.load(open("resource/group_student_files.pkl", "rb"))
     group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
@@ -172,15 +172,15 @@ def load_database():
         print("Database Loading...")
         group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
 
-    # if group_student_files has data
-    if group_student_files:
-        group_name = list(group_student_files.keys())[0]
-        all_dirs_embs = gen_name_embs(group_student_embs[group_name])
-
     print("Database Load Successfully")
 
 
 load_database()
+
+# if group_student_files has data
+if group_student_files:
+    group_name = list(group_student_files.keys())[0]
+    all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
 # %%
@@ -222,7 +222,7 @@ class Window(Ui_MainWindow, QMainWindow):
 
         # setup frame skip
         self.faces = []
-        self.SKIP_FRAMES = 5
+        self.SKIP_FRAMES = 10
         self.frame_count = 0
 
         ########## set ITC's logo ##########
@@ -352,7 +352,6 @@ win.label_developer.setText("Developer: <a href='https://muysengly.github.io/blo
 ########## button save ##########
 def f_save():
     # save data to csv file
-
     if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
 
         tmp_col_data = win.col_data.copy()
@@ -505,8 +504,26 @@ win.pushButton_capture.clicked.connect(f_capture)
 ########## __________ ##########
 
 
-########## end objects for rerun ##########
+########## run program ##########
 app.exec()
+########## __________ ##########
+
+########## auto save ##########
+if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
+
+    tmp_col_data = win.col_data.copy()
+    tmp_col_data.insert(0, [f"{date.today().strftime("%Y-%m-%d")}", ""])
+
+    formatted_data = [item if isinstance(item, list) else [item] for item in tmp_col_data]
+
+    # save to csv
+    with open(f"result/result_{group_name}_{date.today().strftime("%Y_%m_%d")}_{time.strftime("%H_%M_%S")}.csv", "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerows(formatted_data)
+########## __________ ##########
+
+
+########## end objects for rerun ##########
 app.quit()
 cap.release()
 win = None
