@@ -63,7 +63,7 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[4]:
+# In[ ]:
 
 
 def list_camera_devices():
@@ -72,9 +72,10 @@ def list_camera_devices():
     while True:
         cap = cv2.VideoCapture(index)
         if not cap.isOpened():
+            cap.release()
             break
-        cap.release()
         cameras.append(f"Camera #{index}")
+        cap.release()
         index += 1
     return cameras
 
