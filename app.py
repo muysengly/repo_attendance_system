@@ -15,6 +15,8 @@ from PyQt5.QtCore import QStringListModel, QTimer, Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
 from PyQt5.QtGui import QImage, QPixmap, QIcon
 
+from resource.gui import Ui_MainWindow
+
 ########## __________ ##########
 
 
@@ -28,7 +30,6 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 # pyuic5 -x ./resource/022.ui -o ./resource/gui.py
 # os.system("pyuic5 -x ./resource/022.ui -o ./resource/gui.py")
-# from resource.gui import Ui_MainWindow
 ########## __________ ##########
 
 
@@ -42,6 +43,9 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 
 # %%
 ########## initial variable ##########
+
+version = "1.23"
+
 group_student_files = []  # list of student files
 group_student_embs = []  # list of student embeddings
 all_dirs_embs = []  # list of all embeddings
@@ -343,7 +347,7 @@ win = Window()
 
 
 ########## design label ##########
-win.label_version.setText(f"Version: 1.22 🧑‍💻")
+win.label_version.setText(f"Version: {version} 🧑‍💻")
 win.label_developer.setOpenExternalLinks(True)
 win.label_developer.setText("Developer: <a href='https://muysengly.github.io/blog/about/about.html'>MUY Sengly</a> 😊")
 ########## __________ ##########
