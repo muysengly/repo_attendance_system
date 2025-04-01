@@ -130,6 +130,12 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.pushButton_capture.setFont(font)
         self.pushButton_capture.setObjectName("pushButton_capture")
+        self.pushButton_update = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_update.setGeometry(QtCore.QRect(1060, 70, 200, 30))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.pushButton_update.setFont(font)
+        self.pushButton_update.setObjectName("pushButton_update")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -149,6 +155,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan. 🙏"))
         self.label_logo_gtr.setText(_translate("MainWindow", "LOGO"))
         self.pushButton_capture.setText(_translate("MainWindow", "Take Picture"))
+        self.pushButton_update.setText(_translate("MainWindow", "Check Update"))
 
 
 if __name__ == "__main__":
