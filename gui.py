@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
         self.pushButton_capture.setFont(font)
         self.pushButton_capture.setObjectName("pushButton_capture")
         self.pushButton_update = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_update.setGeometry(QtCore.QRect(1060, 70, 200, 30))
+        self.pushButton_update.setGeometry(QtCore.QRect(1060, 75, 200, 30))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.pushButton_update.setFont(font)

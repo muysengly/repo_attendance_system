@@ -1,4 +1,19 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[17]:
+
+
+########## __________ ##########
+# pyuic5 -x 024.ui -o gui.py
+
+# jupyter nbconvert --to script 024.ipynb --output app
+########## __________ ##########
+
+
+# In[18]:
+
+
 ########## import library ##########
 import os
 import re
@@ -29,13 +44,9 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
-########## __________ ##########
-# pyuic5 -x 024.ui -o gui.py
+# In[19]:
 
-# jupyter nbconvert --to script 024.ipynb --output app
-########## __________ ##########
 
-# %%
 ########## initial variable ##########
 version = "1.24"
 
@@ -49,14 +60,18 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# %%
+# In[20]:
+
+
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# %%
+# In[21]:
+
+
 def get_face_embedding(input):
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
     if len(faces) == 0:
@@ -123,7 +138,10 @@ def gen_group_student_embs(input):
     return group_student_embs
 
 
-# %%
+
+# In[22]:
+
+
 def list_camera_devices():
     index = 0
     cameras = []
@@ -141,7 +159,9 @@ cameras = list_camera_devices()
 cap = cv2.VideoCapture(0)
 
 
-# %%
+# In[23]:
+
+
 def load_database():
 
     global group_student_files, group_student_embs
@@ -181,7 +201,9 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# %%
+# In[ ]:
+
+
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
@@ -304,7 +326,7 @@ class Window(Ui_MainWindow, QMainWindow):
                                 ########## save log file ##########
                                 # read new frame
                                 _, tmp_frame = cap.read()
-                                frame = cv2.flip(frame, 1)
+                                tmp_frame = cv2.flip(tmp_frame, 1)
 
                                 # put box and text on image
                                 cv2.rectangle(img=tmp_frame, pt1=(box[0] - 10, box[1] - 10), pt2=(box[2] + 10, box[3] + 10), color=(0, 255, 0), thickness=2)
@@ -332,7 +354,9 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# %%
+# In[ ]:
+
+
 ########## init objects ##########
 cap = cv2.VideoCapture(0)
 app = QApplication([])
@@ -457,19 +481,20 @@ def f_threshold_change():
     similarity_threshold = win.spinBox_threshold.value() / 100
 
 
+
 win.spinBox_threshold.setValue(int(similarity_threshold * 100))
 win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 ########## __________ ##########
 
 
 ########## __________ ##########
-def f_capture():
+def f_take_picture():
 
     selected = win.listView_init.selectedIndexes()
     if selected:
         selected_name = selected[0].data()
         _, tmp_frame = cap.read()
-        frame = cv2.flip(frame, 1)
+        tmp_frame = cv2.flip(tmp_frame, 1)
 
         # show message box
         msg = QMessageBox()
@@ -491,15 +516,16 @@ def f_capture():
 
         if msg.exec_() == QMessageBox.StandardButton.Yes:
             _, tmp_frame = cap.read()
-            frame = cv2.flip(frame, 1)
+            tmp_frame = cv2.flip(tmp_frame, 1)
             cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
             load_database()
         else:
             pass
 
 
-win.pushButton_capture.clicked.connect(f_capture)
+win.pushButton_capture.clicked.connect(f_take_picture)
 ########## __________ ##########
+
 
 
 ########## __________ ##########
@@ -522,6 +548,7 @@ def f_update():
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec_()
         return
+
 
     pattern = r'version = "(\d+\.\d+)"'
     match = re.search(pattern, app_text)
@@ -577,8 +604,11 @@ def f_update():
         msg.exec_()
 
 
+
 win.pushButton_update.clicked.connect(f_update)
 ########## __________ ##########
+
+
 
 
 ########## run program ##########
@@ -608,3 +638,4 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
+
