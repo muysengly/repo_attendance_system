@@ -1,3 +1,8 @@
+# Attendance System with Face Recognition
+
+- Developer: MUY SENGLY
+- Telegram: https://t.me/muysengly
+
 # How to setup?
 
 ---
@@ -7,6 +12,8 @@
 ### 1.1. Download the repository
 
 - **Link**: https://github.com/muysengly/proj_attendance
+
+![alt text](image/003.png)
 
 ### 1.2. Unzip the downloaded file.
 
@@ -42,23 +49,33 @@
 
 Run a file with name: `setup_online.bat`
 
+**NOTE**: if you have problem with `setup_online.bat`, please contact me
+
 ---
 
 ## Step 5: Configure database
 
 Organize the database folder structure by creating a empty folders for `[GROUP NAME]` and empty subfolders for `[STUDENT NAME]`.
 
-**Example**:
+**Example**: Database folder structure
 
 ```
 ...
 database/
-├── GROUP_A/
-│   ├── STUDENT_A1/
-│   └── STUDENT_A2/
-├── GROUP_B/
-│   ├── STUDENT_B1/
-│   └── STUDENT_B2/
+├── MY GROUP A/
+│   ├── STUDENT A1/
+│   │   ├── image1.jpg
+│   │   ...
+│   ├── STUDENT A2/
+│   │   ├── image1.jpg
+│   │   ...
+├── MY GROUP B/
+│   ├── STUDENT B1/
+│   │   ├── image1.jpg
+│   │   ...
+│   ├── STUDENT B2/
+│   │   ├── image1.jpg
+│   │   ...
 ...
 ```
 
