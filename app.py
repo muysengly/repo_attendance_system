@@ -1,4 +1,9 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
 ########## import library ##########
 import os
 import re
@@ -8,6 +13,9 @@ import cv2
 import pickle
 import numpy as np
 
+import re
+import requests
+
 from datetime import date
 from insightface.app import FaceAnalysis
 
@@ -15,7 +23,7 @@ from PyQt5.QtCore import QStringListModel, QTimer, Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
 from PyQt5.QtGui import QImage, QPixmap, QIcon
 
-from resource.gui import Ui_MainWindow
+from gui import Ui_MainWindow
 
 ########## __________ ##########
 
@@ -27,24 +35,20 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
+
 ########## __________ ##########
-# pyuic5 -x ./resource/022.ui -o ./resource/gui.py
-# os.system("pyuic5 -x ./resource/022.ui -o ./resource/gui.py")
-########## __________ ##########
+pyuic5 -x 024.ui -o gui.py
 
-
-########## compile file ##########
-# import py_compile
-
-# py_compile.compile("app.py", cfile="app.pyc")
-# py_compile.compile("resource/gui.py", cfile="resource/gui.pyc")
+jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
 
 
-# %%
+# In[2]:
+
+
 ########## initial variable ##########
 
-version = "1.23"
+version = "1.24"
 
 group_student_files = []  # list of student files
 group_student_embs = []  # list of student embeddings
@@ -56,14 +60,18 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# %%
+# In[3]:
+
+
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# %%
+# In[4]:
+
+
 def get_face_embedding(input):
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
     if len(faces) == 0:
@@ -176,6 +184,8 @@ def load_database():
         print("Database Loading...")
         group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
 
+
+
     print("Database Load Successfully")
 
 
@@ -187,7 +197,9 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# %%
+# In[5]:
+
+
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
@@ -338,7 +350,10 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# %%
+
+# In[6]:
+
+
 ########## init objects ##########
 cap = cv2.VideoCapture(0)
 app = QApplication([])
@@ -356,7 +371,8 @@ win.label_developer.setText("Developer: <a href='https://muysengly.github.io/blo
 ########## button save ##########
 def f_save():
     # save data to csv file
-    if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
+    # if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
+    if win.data_attd != []:
 
         tmp_col_data = win.col_data.copy()
         tmp_col_data.insert(0, [f"{date.today().strftime("%Y-%m-%d")}", ""])
@@ -508,12 +524,83 @@ win.pushButton_capture.clicked.connect(f_capture)
 ########## __________ ##########
 
 
+
+########## __________ ##########
+def f_update():
+
+    app_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/app.py")
+    app_text = app_url.text
+
+    gui_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/gui.py")
+    gui_text = gui_url.text
+
+
+    pattern = r'version = "(\d+\.\d+)"'
+    match = re.search(pattern, app_text)
+    git_version = match.group(1)
+    print(git_version)
+
+    curr_text = open("app.py", "r", encoding="utf-8").read()
+    match = re.search(pattern, curr_text)
+    my_version = match.group(1)
+    print(my_version)
+
+    if git_version != my_version:
+        msg = QMessageBox()
+        msg.setWindowTitle("Update")
+        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
+        _text = f"New version available:\nCurrent version: {my_version}\nNew version: {git_version}\n\nDo you want to update?"
+        msg.setText(_text)
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msg.setDefaultButton(QMessageBox.StandardButton.Yes)
+        if msg.exec_() == QMessageBox.StandardButton.Yes:
+            with open("app.py", "w", encoding="utf-8") as file:
+                file.write(app_text)
+            with open("gui.py", "w", encoding="utf-8") as file:
+                file.write(gui_text)
+            msg = QMessageBox()
+            msg.setWindowTitle("Update")
+            msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
+            msg.setText("Update successfully.\nPlease restart the program.")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec_()
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Update")
+            msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
+            msg.setText("Update cancelled.")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec_()
+    else:
+        msg = QMessageBox()
+        msg.setWindowTitle("Update")
+        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
+        msg.setText("You are using the latest version.")
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec_()
+
+
+
+win.pushButton_update.clicked.connect(f_update)
+########## __________ ##########
+
+
+
+
 ########## run program ##########
 app.exec()
 ########## __________ ##########
 
 ########## auto save ##########
-if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
+if win.data_attd != []:
 
     tmp_col_data = win.col_data.copy()
     tmp_col_data.insert(0, [f"{date.today().strftime("%Y-%m-%d")}", ""])
@@ -533,3 +620,10 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
+
+
+# In[ ]:
+
+
+
+
