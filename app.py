@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[7]:
 
 
 ########## import library ##########
@@ -35,15 +35,14 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
-
 ########## __________ ##########
-pyuic5 -x 024.ui -o gui.py
+# pyuic5 -x 024.ui -o gui.py
 
-jupyter nbconvert --to script 024.ipynb --output app
+# jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
 
 
-# In[2]:
+# In[8]:
 
 
 ########## initial variable ##########
@@ -60,7 +59,7 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[3]:
+# In[9]:
 
 
 ########## define insightface ##########
@@ -69,7 +68,7 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[4]:
+# In[10]:
 
 
 def get_face_embedding(input):
@@ -197,7 +196,7 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# In[5]:
+# In[11]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -351,7 +350,7 @@ class Window(Ui_MainWindow, QMainWindow):
 
 
 
-# In[6]:
+# In[12]:
 
 
 ########## init objects ##########
