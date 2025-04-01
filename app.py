@@ -1,13 +1,18 @@
-#!/usr/bin/env python
-# coding: utf-8
+# %%
 ########## __________ ##########
 # pyuic5 -x 024.ui -o gui.py
 
 # jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
-# In[1]:
 
+# %%
+# TODO:
+#
+#
+#
+#
 
+# %%
 ########## import library ##########
 import os
 import re
@@ -37,59 +42,37 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
-
-# In[2]:
-
-
+# %%
 ########## initial variable ##########
-version = "1.24"
+version = "1.25"
 
 group_name = []  # group name
 all_dirs_embs = []  # list of all embeddings
 group_student_embs = []  # list of student embeddings
 group_student_files = []  # list of student files
 
+min_face_size = 100  # minimum face size
+
 similarity_threshold = pickle.load(open("./resource/similarity_threshold.pkl", "rb"))
 number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[3]:
-
-
+# %%
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
+# what is det_size?
+# det_size is the size of the image used for detection.
 ########## __________ ##########
 
 
-# In[ ]:
-
-
-def list_camera_devices():
-    index = 0
-    cameras = []
-    while True:
-        cap = cv2.VideoCapture(index)
-        if not cap.isOpened():
-            cap.release()
-            break
-        cameras.append(f"Camera #{index}")
-        cap.release()
-        index += 1
-    return cameras
-
-
-cameras = list_camera_devices()
-cap = cv2.VideoCapture(0)
-
-
-# In[5]:
-
-
+# %%
 def get_face_embedding(input):
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
+
     if len(faces) == 0:
+        print(f"Warning: no face detected in {input}")
         os.remove(input)
         return None
     elif len(faces) == 1:
@@ -97,7 +80,14 @@ def get_face_embedding(input):
     elif len(faces) > 1:
         print(f"Warning: {len(faces)} faces detected in {input}")
         main_face = max(faces, key=lambda x: x.bbox[2] - x.bbox[0])
-    return main_face.embedding
+
+    box = main_face.bbox
+    if box[2] - box[0] < min_face_size or box[3] - box[1] < min_face_size:
+        print(f"Warning: face size is too small in {input}")
+        os.remove(input)
+        return None
+    else:
+        return main_face.embedding
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -153,16 +143,24 @@ def gen_group_student_embs(input):
     return output
 
 
+def list_camera_devices():
+    index = 0
+    cameras = []
+    while True:
+        cap = cv2.VideoCapture(index)
+        if not cap.isOpened():
+            break
+        cap.release()
+        cameras.append(f"Camera #{index}")
+        index += 1
+    return cameras
 
-# In[ ]:
+
+cameras = list_camera_devices()
+cap = cv2.VideoCapture(0)
 
 
-
-
-
-# In[6]:
-
-
+# %%
 def load_database():
 
     global group_student_files, group_student_embs
@@ -202,16 +200,14 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# In[7]:
-
-
+# %%
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowTitle("Attendance System")
-        self.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        self.setWindowTitle("Intelligent Systems")
+        self.setWindowIcon(QIcon("./resource/my_logo.png"))
         self.show()
 
         # setup real-time updates
@@ -222,11 +218,11 @@ class Window(Ui_MainWindow, QMainWindow):
 
         # setup init list view
         if group_student_files:
-            self.col_data = list(group_student_files[group_name].keys())
             self.data_init = list(group_student_files[group_name].keys())
         else:
-            self.col_data = []
             self.data_init = []
+
+        self.col_data = self.data_init.copy()
         self.model_init = QStringListModel()
         self.model_init.setStringList(self.data_init)
         self.listView_init.setModel(self.model_init)
@@ -286,6 +282,10 @@ class Window(Ui_MainWindow, QMainWindow):
                     # get face bounding box
                     box = face.bbox.astype(int)
 
+                    # if box is too small, skip it
+                    if (box[2] - box[0]) < min_face_size or (box[3] - box[1]) < min_face_size:
+                        continue
+
                     # if face is not in the list of faces and not in the list of students
                     if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
 
@@ -308,7 +308,7 @@ class Window(Ui_MainWindow, QMainWindow):
                             cv2.putText(img=frame, text="Attended", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
                             # update the attendance data and list follow the frame skip
-                            if (all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd) and (self.frame_count % self.SKIP_FRAMES == 0):
+                            if all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd:
 
                                 self.col_data[np.argmax(np.array(score_all))] = [self.col_data[np.argmax(np.array(score_all))], time.strftime("%H:%M:%S")]
                                 self.data_attd.append(all_dirs_embs[np.argmax(np.array(score_all))][0])
@@ -316,13 +316,6 @@ class Window(Ui_MainWindow, QMainWindow):
                                 tmp_data_attd.reverse()
                                 self.model_attd.setStringList(tmp_data_attd)
                                 self.listView_attd.setModel(self.model_attd)
-
-                                if len(self.data_init) == 1:  # if only one student in the list
-                                    self.data_init = []
-                                else:  # if more than one student in the list
-                                    self.data_init.pop(np.argmax(np.array(score_all)))
-                                self.model_init.setStringList(self.data_init)
-                                self.listView_init.setModel(self.model_init)
 
                                 ########## save log file ##########
                                 # read new frame
@@ -355,9 +348,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[8]:
-
-
+# %%
 ########## init objects ##########
 cap = cv2.VideoCapture(0)
 app = QApplication([])
@@ -375,15 +366,10 @@ win.label_developer.setText("Developer: <a href='https://muysengly.github.io/blo
 ########## button save ##########
 def f_save():
     # save data to csv file
-    # if (not all(len(x) == 0 for x in list(group_student_files.keys()))) and (not all(len(x) == 0 for x in list(group_student_files[group_name].values()))):
     if win.data_attd != []:
-
         tmp_col_data = win.col_data.copy()
         tmp_col_data.insert(0, [f"{date.today().strftime("%Y-%m-%d")}", ""])
-
         formatted_data = [item if isinstance(item, list) else [item] for item in tmp_col_data]
-
-        # save to csv
         with open(f"result/result_{group_name}_{date.today().strftime("%Y_%m_%d")}_{time.strftime("%H_%M_%S")}.csv", "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(formatted_data)
@@ -391,7 +377,7 @@ def f_save():
         # show message box
         msg = QMessageBox()
         msg.setWindowTitle("Success")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("Data saved successfully.")
@@ -400,7 +386,7 @@ def f_save():
     else:
         msg = QMessageBox()
         msg.setWindowTitle("Warning")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Warning)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("No data to save.")
@@ -415,22 +401,8 @@ win.pushButton_save.clicked.connect(f_save)
 ########## butten reset ##########
 def f_reset():
 
-    global all_dirs_embs
-
-    if group_student_files:
-        all_dirs_embs = gen_name_embs(group_student_embs[group_name])
-        win.col_data = list(group_student_files[win.comboBox_group.currentText()].keys())
-        win.data_init = list(group_student_files[win.comboBox_group.currentText()].keys())
-    else:
-        win.col_data = []
-        win.data_init = []
-
+    win.col_data = win.data_init.copy()
     win.data_attd = []
-
-    win.model_init = QStringListModel()
-    win.model_init.setStringList(win.data_init)
-    win.listView_init.setModel(win.model_init)
-
     win.model_attd = QStringListModel()
     win.model_attd.setStringList(win.data_attd)
     win.listView_attd.setModel(win.model_attd)
@@ -459,13 +431,13 @@ def f_group_change():
     group_name = win.comboBox_group.currentText()
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
-    win.col_data = list(group_student_files[win.comboBox_group.currentText()].keys())
     win.data_init = list(group_student_files[win.comboBox_group.currentText()].keys())
-    win.data_attd = []
-
     win.model_init = QStringListModel()
     win.model_init.setStringList(win.data_init)
     win.listView_init.setModel(win.model_init)
+
+    win.col_data = win.data_init.copy()
+    win.data_attd = []
     win.model_attd = QStringListModel()
     win.model_attd.setStringList(win.data_attd)
     win.listView_attd.setModel(win.model_attd)
@@ -482,7 +454,6 @@ def f_threshold_change():
     similarity_threshold = win.spinBox_threshold.value() / 100
 
 
-
 win.spinBox_threshold.setValue(int(similarity_threshold * 100))
 win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 ########## __________ ##########
@@ -496,41 +467,40 @@ def f_take_picture():
     selected = win.listView_init.selectedIndexes()
     if selected:
         selected_name = selected[0].data()
+
         _, tmp_frame = cap.read()
         tmp_frame = cv2.flip(tmp_frame, 1)
 
         # show message box
         msg = QMessageBox()
-        # msg.setWindowTitle("Success")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         msg.setDefaultButton(QMessageBox.StandardButton.Yes)
-
-        # set image to msg
         tmp_frame = cv2.resize(tmp_frame, dsize=(640, 480))
         tmp_frame = cv2.cvtColor(tmp_frame, cv2.COLOR_BGR2RGB)
         q_image = QImage(tmp_frame.data, tmp_frame.shape[1], tmp_frame.shape[0], QImage.Format.Format_RGB888)
         q_pixmap = QPixmap.fromImage(q_image)
         msg.setIconPixmap(q_pixmap)
-
         msg.setWindowTitle(f"Do you want to save the image for {selected_name}?")
 
         if msg.exec_() == QMessageBox.StandardButton.Yes:
             _, tmp_frame = cap.read()
             tmp_frame = cv2.flip(tmp_frame, 1)
             cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
+
             load_database()
+
             if group_student_files:
                 all_dirs_embs = gen_name_embs(group_student_embs[group_name])
+
         else:
             pass
 
 
 win.pushButton_capture.clicked.connect(f_take_picture)
 ########## __________ ##########
-
 
 
 ########## __________ ##########
@@ -546,14 +516,13 @@ def f_update():
     except requests.exceptions.RequestException as e:
         msg = QMessageBox()
         msg.setWindowTitle("Error")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("Failed to fetch update files. \nPlease check your internet connection.")
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec_()
         return
-
 
     pattern = r'version = "(\d+\.\d+)"'
     match = re.search(pattern, app_text)
@@ -569,7 +538,7 @@ def f_update():
     if git_version != my_version:
         msg = QMessageBox()
         msg.setWindowTitle("Update")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         _text = f"New version available:\nCurrent version: {my_version}\nNew version: {git_version}\n\nDo you want to update?"
@@ -583,7 +552,7 @@ def f_update():
                 file.write(gui_text)
             msg = QMessageBox()
             msg.setWindowTitle("Update")
-            msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+            msg.setWindowIcon(QIcon("./resource/my_logo.png"))
             msg.setIcon(QMessageBox.Icon.Information)
             msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
             msg.setText("Update successfully.\nPlease restart the program.")
@@ -592,7 +561,7 @@ def f_update():
         else:
             msg = QMessageBox()
             msg.setWindowTitle("Update")
-            msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+            msg.setWindowIcon(QIcon("./resource/my_logo.png"))
             msg.setIcon(QMessageBox.Icon.Information)
             msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
             msg.setText("Update cancelled.")
@@ -601,7 +570,7 @@ def f_update():
     else:
         msg = QMessageBox()
         msg.setWindowTitle("Update")
-        msg.setWindowIcon(QIcon("./resource/mu_logo.png"))
+        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("You are using the latest version.")
@@ -609,11 +578,8 @@ def f_update():
         msg.exec_()
 
 
-
 win.pushButton_update.clicked.connect(f_update)
 ########## __________ ##########
-
-
 
 
 ########## run program ##########
@@ -622,18 +588,6 @@ app.exec()
 
 ########## auto save ##########
 pickle.dump(similarity_threshold, open("resource/similarity_threshold.pkl", "wb"))
-
-if win.data_attd != []:
-
-    tmp_col_data = win.col_data.copy()
-    tmp_col_data.insert(0, [f"{date.today().strftime("%Y-%m-%d")}", ""])
-
-    formatted_data = [item if isinstance(item, list) else [item] for item in tmp_col_data]
-
-    # save to csv
-    with open(f"result/result_{group_name}_{date.today().strftime("%Y_%m_%d")}_{time.strftime("%H_%M_%S")}.csv", "w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerows(formatted_data)
 ########## __________ ##########
 
 
@@ -643,4 +597,3 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
-

@@ -7,7 +7,7 @@
 
 ---
 
-## Step 1: Download the repository
+## Step 1: Download Project
 
 ### 1.1. Download the repository
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Step 2: Download the Visual Studio Build Tools installer from the following URL:
+## Step 2: Download and install Visual Studio Build Tools
 
 ### 2.1. Download Visual Studio Build Tools
 
@@ -33,13 +33,13 @@
 
 ---
 
-## Step 3: Download the Python installer from the following URL:
+## Step 3: Download and install Python 3.12
 
-### 3.1. Download Python 3.12.9
+### 3.1. Download Python 3.12
 
 - **Link**: https://www.python.org/ftp/python/3.12.9/python-3.12.9-amd64.exe
 
-### 3.2. Install Python 3.12.9
+### 3.2. Install Python 3.12
 
 ![alt text](resource/image/002.png)
 
@@ -47,7 +47,9 @@
 
 ## Step 4: Setup Project
 
-Run a file with name: `setup_online.bat`
+### 4.1. Run bat file to install required libraries
+
+- Run a file with name: `setup_online.bat`
 
 **NOTE**: if you have problem with `setup_online.bat`, please contact me
 
@@ -55,7 +57,9 @@ Run a file with name: `setup_online.bat`
 
 ## Step 5: Configure database
 
-Organize the database folder structure by creating a empty folders for `[GROUP NAME]` and empty subfolders for `[STUDENT NAME]`.
+### 5.1. Configure database folder
+
+- To set up the `database` folder, create empty subfolders for each `group name` and further subfolders within them for each `student name`.
 
 **Example**: Database folder structure
 
@@ -83,4 +87,6 @@ database/
 
 ## Step 6: Run the project
 
-Run a file with name: `run.bat`
+### 6.1. Run the project
+
+- **Run**: `python main.py`
