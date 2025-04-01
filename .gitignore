@@ -15,14 +15,11 @@ log/*.jpg
 
 resource/windows/
 resource/*.ui
-resource/*.py
 
 *.ipynb
-*.py
 *.ui
 
 **/*.ipynb
-**/*.py
 **/*.ui
 
 .gitignore
