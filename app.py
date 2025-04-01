@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[17]:
-
-
 ########## __________ ##########
 # pyuic5 -x 024.ui -o gui.py
 
 # jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
-
-
-# In[18]:
+# In[2]:
 
 
 ########## import library ##########
@@ -44,7 +38,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
-# In[19]:
+# In[3]:
 
 
 ########## initial variable ##########
@@ -60,7 +54,7 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[20]:
+# In[4]:
 
 
 ########## define insightface ##########
@@ -69,7 +63,7 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[21]:
+# In[5]:
 
 
 def get_face_embedding(input):
@@ -139,7 +133,7 @@ def gen_group_student_embs(input):
 
 
 
-# In[22]:
+# In[6]:
 
 
 def list_camera_devices():
@@ -159,7 +153,7 @@ cameras = list_camera_devices()
 cap = cv2.VideoCapture(0)
 
 
-# In[23]:
+# In[7]:
 
 
 def load_database():
@@ -201,7 +195,7 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# In[ ]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -354,7 +348,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[9]:
 
 
 ########## init objects ##########
@@ -490,6 +484,8 @@ win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 ########## __________ ##########
 def f_take_picture():
 
+    global all_dirs_embs
+
     selected = win.listView_init.selectedIndexes()
     if selected:
         selected_name = selected[0].data()
@@ -519,6 +515,8 @@ def f_take_picture():
             tmp_frame = cv2.flip(tmp_frame, 1)
             cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
             load_database()
+            if group_student_files:
+                all_dirs_embs = gen_name_embs(group_student_embs[group_name])
         else:
             pass
 

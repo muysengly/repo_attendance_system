@@ -9,6 +9,7 @@ setup_offline/
 venv/
 
 database/Group GTR I3/
+database/**/*.jpg
 
 result/*.csv
 log/*.jpg
