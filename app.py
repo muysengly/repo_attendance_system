@@ -183,8 +183,6 @@ def load_database():
         print("Database Loading...")
         group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
 
-
-
     print("Database Load Successfully")
 
 
@@ -347,7 +345,6 @@ class Window(Ui_MainWindow, QMainWindow):
             q_image = QImage(image.data, self.WIDTH, self.HEIGHT, QImage.Format.Format_RGB888)
             q_pixmap = QPixmap.fromImage(q_image)
             self.label_camera.setPixmap(q_pixmap)
-
 
 
 # In[12]:
@@ -523,7 +520,6 @@ win.pushButton_capture.clicked.connect(f_capture)
 ########## __________ ##########
 
 
-
 ########## __________ ##########
 def f_update():
 
@@ -532,7 +528,6 @@ def f_update():
 
     gui_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/gui.py")
     gui_text = gui_url.text
-
 
     pattern = r'version = "(\d+\.\d+)"'
     match = re.search(pattern, app_text)
@@ -587,11 +582,8 @@ def f_update():
         msg.exec_()
 
 
-
 win.pushButton_update.clicked.connect(f_update)
 ########## __________ ##########
-
-
 
 
 ########## run program ##########
@@ -622,7 +614,3 @@ app = None
 
 
 # In[ ]:
-
-
-
-
