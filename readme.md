@@ -13,7 +13,7 @@
 
 - **Link**: https://github.com/muysengly/proj_attendance
 
-![alt text](image/003.png)
+![alt text](resource/image/003.png)
 
 ### 1.2. Unzip the downloaded file.
 
@@ -29,7 +29,7 @@
 
 ### 2.2. Install Visual Studio Build Tools with C++ Build Tools
 
-![alt text](image/001.png)
+![alt text](resource/image/001.png)
 
 ---
 
@@ -41,7 +41,7 @@
 
 ### 3.2. Install Python 3.12.9
 
-![alt text](image/002.png)
+![alt text](resource/image/002.png)
 
 ---
 
