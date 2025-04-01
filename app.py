@@ -5,7 +5,7 @@
 
 # jupyter nbconvert --to script 024.ipynb --output app
 ########## __________ ##########
-# In[2]:
+# In[1]:
 
 
 ########## import library ##########
@@ -38,7 +38,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
-# In[3]:
+# In[2]:
 
 
 ########## initial variable ##########
@@ -54,13 +54,33 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[4]:
+# In[3]:
 
 
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
+
+
+# In[4]:
+
+
+def list_camera_devices():
+    index = 0
+    cameras = []
+    while True:
+        cap = cv2.VideoCapture(index)
+        if not cap.isOpened():
+            break
+        cap.release()
+        cameras.append(f"Camera #{index}")
+        index += 1
+    return cameras
+
+
+cameras = list_camera_devices()
+cap = cv2.VideoCapture(0)
 
 
 # In[5]:
@@ -118,42 +138,28 @@ def gen_name_embs(input):
 
 
 def gen_group_student_embs(input):
-    group_student_embs = {}
+    output = {}
     for g in input:
-        group_student_embs[g] = {}
+        output[g] = {}
         for s in input[g]:
-            group_student_embs[g][s] = []
+            output[g][s] = []
             for f in input[g][s]:
                 # IMPORTANT: check if the file is in prev_group_student_files
                 if (group_student_files.get(g) is None) or (group_student_files[g].get(s) is None) or (f not in group_student_files[g][s]):
-                    group_student_embs[g][s] = [get_face_embedding(f"database/{g}/{s}/{f}")]
+                    output[g][s] = [get_face_embedding(f"database/{g}/{s}/{f}")]
                 else:
-                    group_student_embs[g][s] = group_student_embs[g][s]
-    return group_student_embs
+                    output[g][s] = group_student_embs[g][s]
+    return output
+
+
+
+# In[ ]:
+
+
 
 
 
 # In[6]:
-
-
-def list_camera_devices():
-    index = 0
-    cameras = []
-    while True:
-        cap = cv2.VideoCapture(index)
-        if not cap.isOpened():
-            break
-        cap.release()
-        cameras.append(f"Camera #{index}")
-        index += 1
-    return cameras
-
-
-cameras = list_camera_devices()
-cap = cv2.VideoCapture(0)
-
-
-# In[7]:
 
 
 def load_database():
@@ -195,7 +201,7 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# In[8]:
+# In[7]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -348,7 +354,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[9]:
+# In[8]:
 
 
 ########## init objects ##########
