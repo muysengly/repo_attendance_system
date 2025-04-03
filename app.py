@@ -1,14 +1,14 @@
 # %%
 ########## __________ ##########
-# pyuic5 -x 024.ui -o gui.py
+# pyuic5 -x 025.ui -o gui.py
 
-# jupyter nbconvert --to script 024.ipynb --output app
+# jupyter nbconvert --to script 025.ipynb --output app
 ########## __________ ##########
 
 # %%
 # TODO:
 #
-#
+# - Database management
 #
 #
 
@@ -317,18 +317,8 @@ class Window(Ui_MainWindow, QMainWindow):
                                 self.model_attd.setStringList(tmp_data_attd)
                                 self.listView_attd.setModel(self.model_attd)
 
-                                ########## save log file ##########
-                                # read new frame
-                                _, tmp_frame = cap.read()
-                                tmp_frame = cv2.flip(tmp_frame, 1)
+                                cv2.imwrite(f"log/log_{group_name}_{all_dirs_embs[np.argmax(np.array(score_all))][0]}_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", frame)
 
-                                # put box and text on image
-                                cv2.rectangle(img=tmp_frame, pt1=(box[0] - 10, box[1] - 10), pt2=(box[2] + 10, box[3] + 10), color=(0, 255, 0), thickness=2)
-                                cv2.putText(img=tmp_frame, text=f"{all_dirs_embs[np.argmax(np.array(score_all))][0]} {100*np.max(np.array(score_all)):.0f}%", org=(box[0], box[1] - 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
-
-                                # save image with name
-                                cv2.imwrite(f"log/log_{group_name}_{all_dirs_embs[np.argmax(np.array(score_all))][0]}_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
-                                ########## __________ ##########
                         else:
                             cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
                             cv2.putText(img=frame, text=f"{all_dirs_embs[np.argmax(np.array(score_all))][0]} {100*np.max(np.array(score_all)):.0f}%", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
@@ -486,15 +476,10 @@ def f_take_picture():
         msg.setWindowTitle(f"Do you want to save the image for {selected_name}?")
 
         if msg.exec_() == QMessageBox.StandardButton.Yes:
-            _, tmp_frame = cap.read()
-            tmp_frame = cv2.flip(tmp_frame, 1)
             cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
-
             load_database()
-
             if group_student_files:
                 all_dirs_embs = gen_name_embs(group_student_embs[group_name])
-
         else:
             pass
 
@@ -510,7 +495,6 @@ def f_update():
     try:
         app_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/app.py")
         app_text = app_url.text
-
         gui_url = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/main/gui.py")
         gui_text = gui_url.text
     except requests.exceptions.RequestException as e:
