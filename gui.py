@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Threshold [%]:"))
         self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan. 🙏"))
         self.label_logo_gtr.setText(_translate("MainWindow", "LOGO"))
-        self.pushButton_capture.setText(_translate("MainWindow", "Take Picture"))
+        self.pushButton_capture.setText(_translate("MainWindow", "Register"))
         self.pushButton_update.setText(_translate("MainWindow", "Check Update"))
 
 

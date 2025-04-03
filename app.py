@@ -1,18 +1,29 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
 ########## __________ ##########
 # pyuic5 -x 025.ui -o gui.py
 
 # jupyter nbconvert --to script 025.ipynb --output app
 ########## __________ ##########
 
-# %%
-# TODO:
-#
-# - Database management
-#
-#
 
-# %%
+# In[2]:
+
+
+# TODO:
+# 
+# - File edited but database does not update
+# 
+# 
+
+
+# In[3]:
+
+
 ########## import library ##########
 import os
 import re
@@ -42,7 +53,10 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
-# %%
+
+# In[4]:
+
+
 ########## initial variable ##########
 version = "1.25"
 
@@ -50,6 +64,7 @@ group_name = []  # group name
 all_dirs_embs = []  # list of all embeddings
 group_student_embs = []  # list of student embeddings
 group_student_files = []  # list of student files
+group_student_file_sizes = []  # list of student file sizes
 
 min_face_size = 100  # minimum face size
 
@@ -58,7 +73,9 @@ number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# %%
+# In[5]:
+
+
 ########## define insightface ##########
 fa = FaceAnalysis(name="buffalo_sc", root=os.getcwd(), providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
@@ -67,7 +84,9 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# %%
+# In[6]:
+
+
 def get_face_embedding(input):
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
 
@@ -143,6 +162,17 @@ def gen_group_student_embs(input):
     return output
 
 
+def get_group_student_file_size(input):
+    output = {}
+    for g in input:
+        output[g] = {}
+        for s in input[g]:
+            output[g][s] = {}
+            for f in input[g][s]:
+                output[g][s][f] = os.path.getsize(f"database/{g}/{s}/{f}")
+    return output
+
+
 def list_camera_devices():
     index = 0
     cameras = []
@@ -160,7 +190,9 @@ cameras = list_camera_devices()
 cap = cv2.VideoCapture(0)
 
 
-# %%
+# In[7]:
+
+
 def load_database():
 
     global group_student_files, group_student_embs
@@ -200,7 +232,15 @@ if group_student_files:
     all_dirs_embs = gen_name_embs(group_student_embs[group_name])
 
 
-# %%
+# In[ ]:
+
+
+
+
+
+# In[8]:
+
+
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
@@ -308,7 +348,7 @@ class Window(Ui_MainWindow, QMainWindow):
                             cv2.putText(img=frame, text="Attended", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
                             # update the attendance data and list follow the frame skip
-                            if all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd:
+                            if (all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd):
 
                                 self.col_data[np.argmax(np.array(score_all))] = [self.col_data[np.argmax(np.array(score_all))], time.strftime("%H:%M:%S")]
                                 self.data_attd.append(all_dirs_embs[np.argmax(np.array(score_all))][0])
@@ -338,7 +378,9 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# %%
+# In[9]:
+
+
 ########## init objects ##########
 cap = cv2.VideoCapture(0)
 app = QApplication([])
@@ -458,8 +500,8 @@ def f_take_picture():
     if selected:
         selected_name = selected[0].data()
 
-        _, tmp_frame = cap.read()
-        tmp_frame = cv2.flip(tmp_frame, 1)
+        _, _frame = cap.read()
+        _frame = cv2.flip(_frame, 1)
 
         # show message box
         msg = QMessageBox()
@@ -468,15 +510,16 @@ def f_take_picture():
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         msg.setDefaultButton(QMessageBox.StandardButton.Yes)
-        tmp_frame = cv2.resize(tmp_frame, dsize=(640, 480))
-        tmp_frame = cv2.cvtColor(tmp_frame, cv2.COLOR_BGR2RGB)
-        q_image = QImage(tmp_frame.data, tmp_frame.shape[1], tmp_frame.shape[0], QImage.Format.Format_RGB888)
+        _frame = cv2.resize(_frame, dsize=(640, 480))
+        _frame = cv2.cvtColor(_frame, cv2.COLOR_BGR2RGB)
+        q_image = QImage(_frame.data, _frame.shape[1], _frame.shape[0], QImage.Format.Format_RGB888)
         q_pixmap = QPixmap.fromImage(q_image)
         msg.setIconPixmap(q_pixmap)
         msg.setWindowTitle(f"Do you want to save the image for {selected_name}?")
 
         if msg.exec_() == QMessageBox.StandardButton.Yes:
-            cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", tmp_frame)
+            _frame = cv2.cvtColor(_frame, cv2.COLOR_RGB2BGR)
+            cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", _frame)
             load_database()
             if group_student_files:
                 all_dirs_embs = gen_name_embs(group_student_embs[group_name])
@@ -581,3 +624,4 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
+
