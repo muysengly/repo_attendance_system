@@ -3,25 +3,25 @@
 - Developer: MUY SENGLY
 - Telegram: https://t.me/muysengly
 
-# How to setup?
+# How To Setup?
 
 ---
 
 ## Step 1: Download Project
 
-### 1.1. Download the repository
+### 1.1. Download The Repository
 
 - **Link**: https://github.com/muysengly/proj_attendance
 
 ![alt text](resource/image/003.png)
 
-### 1.2. Unzip the downloaded file.
+### 1.2. Unzip The Downloaded File.
 
 - **Recommended**: Unzip the file to `Desktop`.
 
 ---
 
-## Step 2: Download and install Visual Studio Build Tools
+## Step 2: Download And Install Visual Studio Build Tools
 
 ### 2.1. Download Visual Studio Build Tools
 
@@ -33,7 +33,7 @@
 
 ---
 
-## Step 3: Download and install Python 3.12
+## Step 3: Download And Install Python 3.12
 
 ### 3.1. Download Python 3.12
 
@@ -47,7 +47,7 @@
 
 ## Step 4: Setup Project
 
-### 4.1. Run bat file to install required libraries
+### 4.1. Run Bat File To Install Required Libraries
 
 - Run a file with name: `setup_online.bat`
 
@@ -55,9 +55,9 @@
 
 ---
 
-## Step 5: Configure database
+## Step 5: Configure Database
 
-### 5.1. Configure database folder
+### 5.1. Configure Database Folder
 
 - To set up the `database` folder, create empty subfolders for each `group name` and further subfolders within them for each `student name`.
 
@@ -85,8 +85,8 @@ database/
 
 ---
 
-## Step 6: Run the project
+## Step 6: Run The Project
 
-### 6.1. Run the project
+### 6.1. Run The Project
 
 - **Run**: `python main.py`
