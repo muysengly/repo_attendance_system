@@ -152,7 +152,7 @@ class Ui_MainWindow(object):
         self.label_version.setText(_translate("MainWindow", "Version"))
         self.label_developer.setText(_translate("MainWindow", "Developer"))
         self.label.setText(_translate("MainWindow", "Threshold [%]:"))
-        self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan. 🙏"))
+        self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan, and 7th generation GTR students 🙏"))
         self.label_logo_gtr.setText(_translate("MainWindow", "LOGO"))
         self.pushButton_capture.setText(_translate("MainWindow", "Register"))
         self.pushButton_update.setText(_translate("MainWindow", "Check Update"))

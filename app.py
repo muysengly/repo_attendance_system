@@ -15,10 +15,10 @@
 
 
 # TODO:
-# 
+#
 # - File edited but database does not update
-# 
-# 
+#
+#
 
 
 # In[3]:
@@ -235,9 +235,6 @@ if group_student_files:
 # In[ ]:
 
 
-
-
-
 # In[8]:
 
 
@@ -348,7 +345,7 @@ class Window(Ui_MainWindow, QMainWindow):
                             cv2.putText(img=frame, text="Attended", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
                             # update the attendance data and list follow the frame skip
-                            if (all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd):
+                            if all_dirs_embs[np.argmax(np.array(score_all))][0] not in self.data_attd:
 
                                 self.col_data[np.argmax(np.array(score_all))] = [self.col_data[np.argmax(np.array(score_all))], time.strftime("%H:%M:%S")]
                                 self.data_attd.append(all_dirs_embs[np.argmax(np.array(score_all))][0])
@@ -624,4 +621,3 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
-
