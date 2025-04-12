@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src/gui/026.ui'
+# Form implementation generated from reading ui file 'github/gui/026.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -45,13 +45,13 @@ class Ui_MainWindow(object):
         self.listView_init.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.listView_init.setObjectName("listView_init")
         self.pushButton_reset = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_reset.setGeometry(QtCore.QRect(655, 605, 300, 40))
+        self.pushButton_reset.setGeometry(QtCore.QRect(1180, 110, 80, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.pushButton_reset.setFont(font)
         self.pushButton_reset.setObjectName("pushButton_reset")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(960, 120, 300, 30))
+        self.label_3.setGeometry(QtCore.QRect(960, 115, 300, 30))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -90,7 +90,7 @@ class Ui_MainWindow(object):
         self.label_developer.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_developer.setObjectName("label_developer")
         self.comboBox_camera = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox_camera.setGeometry(QtCore.QRect(10, 610, 200, 30))
+        self.comboBox_camera.setGeometry(QtCore.QRect(10, 605, 200, 30))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.comboBox_camera.setFont(font)
@@ -120,13 +120,13 @@ class Ui_MainWindow(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.pushButton_capture = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_capture.setGeometry(QtCore.QRect(240, 605, 200, 40))
+        self.pushButton_capture.setGeometry(QtCore.QRect(655, 606, 300, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.pushButton_capture.setFont(font)
         self.pushButton_capture.setObjectName("pushButton_capture")
         self.pushButton_update = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_update.setGeometry(QtCore.QRect(1060, 75, 200, 30))
+        self.pushButton_update.setGeometry(QtCore.QRect(260, 605, 100, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.pushButton_update.setFont(font)
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Threshold [%]:"))
         self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan, and 7th generation GTR students 🙏"))
         self.pushButton_capture.setText(_translate("MainWindow", "Register"))
-        self.pushButton_update.setText(_translate("MainWindow", "Check Update"))
+        self.pushButton_update.setText(_translate("MainWindow", "Update"))
 
 
 if __name__ == "__main__":
