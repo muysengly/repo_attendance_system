@@ -5,9 +5,9 @@
 
 
 ########## __________ ##########
-# pyuic5 -x 025.ui -o gui.py
+# pyuic5 -x 026.ui -o gui.py
 
-# jupyter nbconvert --to script 025.ipynb --output app
+# jupyter nbconvert --to script src/026.ipynb --output app --output-dir=src
 ########## __________ ##########
 
 
@@ -21,7 +21,7 @@
 #
 
 
-# In[3]:
+# In[2]:
 
 
 ########## import library ##########
@@ -42,7 +42,7 @@ from PyQt5.QtGui import QImage, QPixmap, QIcon
 from PyQt5.QtCore import QStringListModel, QTimer, Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication
 
-from gui import Ui_MainWindow
+from src.gui.gui import Ui_MainWindow
 
 ########## __________ ##########
 
@@ -54,11 +54,11 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 ########## __________ ##########
 
 
-# In[4]:
+# In[9]:
 
 
 ########## initial variable ##########
-version = "1.25"
+version = "1.26"
 
 group_name = []  # group name
 all_dirs_embs = []  # list of all embeddings
@@ -68,12 +68,13 @@ group_student_file_sizes = []  # list of student file sizes
 
 min_face_size = 100  # minimum face size
 
-similarity_threshold = pickle.load(open("./resource/similarity_threshold.pkl", "rb"))
+# similarity_threshold = pickle.load(open("./resource/similarity_threshold.pkl", "rb"))
+similarity_threshold = pickle.load(open("../var/similarity_threshold.pkl", "rb"))
 number_of_faces_maximum = 5
 ########## __________ ##########
 
 
-# In[5]:
+# In[ ]:
 
 
 ########## define insightface ##########
@@ -84,126 +85,179 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[6]:
+# In[ ]:
+
+
+# utility functions
 
 
 def get_face_embedding(input):
+
     faces = fa.get(cv2.imread(input), max_num=number_of_faces_maximum)
 
     if len(faces) == 0:
+
         print(f"Warning: no face detected in {input}")
+
         os.remove(input)
+
         return None
+
     elif len(faces) == 1:
+
         main_face = faces[0]
+
     elif len(faces) > 1:
+
         print(f"Warning: {len(faces)} faces detected in {input}")
+
         main_face = max(faces, key=lambda x: x.bbox[2] - x.bbox[0])
 
     box = main_face.bbox
+
     if box[2] - box[0] < min_face_size or box[3] - box[1] < min_face_size:
+
         print(f"Warning: face size is too small in {input}")
+
         os.remove(input)
+
         return None
     else:
+
         return main_face.embedding
 
 
 def compare_faces_cosine(emb1, emb2):
+
     similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
+
     return similarity
 
 
-def list_folders(input, pattern=None):
+def get_list_folders(input, pattern=None):
+
     if pattern is not None:
+
         return [f for f in os.listdir(input) if os.path.isdir(os.path.join(input, f)) and re.search(pattern, f)]
     else:
+
         return [f for f in os.listdir(input) if os.path.isdir(os.path.join(input, f))]
 
 
-def list_files(input, pattern=None):
+def get_list_files(input, pattern=None):
+
     if pattern is None:
+
         return [f for f in os.listdir(input) if os.path.isfile(os.path.join(input, f))]
     else:
+
         return [f for f in os.listdir(input) if os.path.isfile(os.path.join(input, f)) and re.search(pattern, f)]
 
 
 def scan_directory(input):
+
     data = {}
-    for group in list_folders(input):
+    for group in get_list_folders(input):
+
         data[group] = {}
-        for student in list_folders(f"{input}/{group}"):
-            data[group][student] = list_files(f"{input}/{group}/{student}", "jpg")
+
+        for student in get_list_folders(f"{input}/{group}"):
+
+            data[group][student] = get_list_files(f"{input}/{group}/{student}", "jpg")
     return data
 
 
-def gen_name_embs(input):
+def get_name_embs(input):
+
     all_dirs_embs = []
     for n in input:
+
         tmp = []
         for e in input[n]:
             tmp.append(e)
+
         all_dirs_embs.append([n, tmp])
+
     return all_dirs_embs
 
 
-def gen_group_student_embs(input):
+def get_group_student_embs(input):
+
     output = {}
     for g in input:
+
         output[g] = {}
         for s in input[g]:
+
             output[g][s] = []
             for f in input[g][s]:
+
                 # IMPORTANT: check if the file is in prev_group_student_files
+
                 if (group_student_files.get(g) is None) or (group_student_files[g].get(s) is None) or (f not in group_student_files[g][s]):
+
                     output[g][s] = [get_face_embedding(f"database/{g}/{s}/{f}")]
                 else:
+
                     output[g][s] = group_student_embs[g][s]
     return output
 
 
 def get_group_student_file_size(input):
+
     output = {}
     for g in input:
+
         output[g] = {}
         for s in input[g]:
+
             output[g][s] = {}
             for f in input[g][s]:
+
                 output[g][s][f] = os.path.getsize(f"database/{g}/{s}/{f}")
     return output
 
 
-def list_camera_devices():
+def get_list_camera_devices():
+
     index = 0
+
     cameras = []
+
     while True:
+
         cap = cv2.VideoCapture(index)
+
         if not cap.isOpened():
+
             break
         cap.release()
+
         cameras.append(f"Camera #{index}")
+
         index += 1
     return cameras
 
 
-cameras = list_camera_devices()
+cameras = get_list_camera_devices()
+
 cap = cv2.VideoCapture(0)
 
 
-# In[7]:
+# In[ ]:
 
 
 def load_database():
 
     global group_student_files, group_student_embs
 
-    group_student_files = pickle.load(open("resource/group_student_files.pkl", "rb"))
-    group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
+    group_student_files = pickle.load(open("./var/group_student_files.pkl", "rb"))
+    group_student_embs = pickle.load(open("./var/group_student_embs.pkl", "rb"))
     _group_student_files = scan_directory("database")
 
     if _group_student_files != group_student_files:
         print("Database Updating...")
-        _group_student_embs = gen_group_student_embs(_group_student_files)
+        _group_student_embs = get_group_student_embs(_group_student_files)
         for g in _group_student_embs:
             for s in _group_student_embs[g]:
                 for e in _group_student_embs[g][s]:
@@ -214,12 +268,12 @@ def load_database():
 
         group_student_files = _group_student_files
         group_student_embs = _group_student_embs
-        pickle.dump(group_student_files, open("resource/group_student_files.pkl", "wb"))
-        pickle.dump(group_student_embs, open("resource/group_student_embs.pkl", "wb"))
+        pickle.dump(group_student_files, open("./var/group_student_files.pkl", "wb"))
+        pickle.dump(group_student_embs, open("./var/group_student_embs.pkl", "wb"))
 
     else:
         print("Database Loading...")
-        group_student_embs = pickle.load(open("resource/group_student_embs.pkl", "rb"))
+        group_student_embs = pickle.load(open("./var/group_student_embs.pkl", "rb"))
 
     print("Database Load Successfully")
 
@@ -229,13 +283,10 @@ load_database()
 # if group_student_files has data
 if group_student_files:
     group_name = list(group_student_files.keys())[0]
-    all_dirs_embs = gen_name_embs(group_student_embs[group_name])
+    all_dirs_embs = get_name_embs(group_student_embs[group_name])
 
 
 # In[ ]:
-
-
-# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -244,7 +295,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowTitle("Intelligent Systems")
-        self.setWindowIcon(QIcon("./resource/my_logo.png"))
+        self.setWindowIcon(QIcon("./src/img/my_logo.png"))
         self.show()
 
         # setup real-time updates
@@ -281,25 +332,15 @@ class Window(Ui_MainWindow, QMainWindow):
 
         ########## set ITC's logo ##########
         # set image to win.label_logo_itc
-        logo_itc = cv2.imread("./resource/itc_logo.png")
+        logo_itc = cv2.imread("./src/img/my_logo.png")
         logo_itc = cv2.cvtColor(logo_itc, cv2.COLOR_BGR2RGB)
-        logo_itc = cv2.resize(logo_itc, (self.label_logo_itc.width(), self.label_logo_itc.height()))
+        logo_itc = cv2.resize(logo_itc, (self.label_logo.width(), self.label_logo.height()))
         q_logo_itc = QImage(logo_itc.data, logo_itc.shape[1], logo_itc.shape[0], QImage.Format.Format_RGB888)
         q_pixmap_logo_itc = QPixmap.fromImage(q_logo_itc)
-        self.label_logo_itc.setPixmap(q_pixmap_logo_itc)
-        self.label_logo_itc.setScaledContents(True)
+        self.label_logo.setPixmap(q_pixmap_logo_itc)
+        self.label_logo.setScaledContents(True)
         ########## __________ ##########
 
-        ########## set GTR's logo ##########
-        # set image to win.label_logo_gtr
-        logo_gtr = cv2.imread("./resource/gtr_logo.png")
-        logo_gtr = cv2.cvtColor(logo_gtr, cv2.COLOR_BGR2RGB)
-        logo_gtr = cv2.resize(logo_gtr, (self.label_logo_gtr.width(), self.label_logo_gtr.height()))
-        q_logo_gtr = QImage(logo_gtr.data, logo_gtr.shape[1], logo_gtr.shape[0], QImage.Format.Format_RGB888)
-        q_pixmap_logo_gtr = QPixmap.fromImage(q_logo_gtr)
-        self.label_logo_gtr.setPixmap(q_pixmap_logo_gtr)
-        self.label_logo_gtr.setScaledContents(True)
-        ########## __________ ##########
 
     def paintEvent(self, event):
         if cap.isOpened():
@@ -375,7 +416,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[9]:
+# In[ ]:
 
 
 ########## init objects ##########
@@ -406,7 +447,7 @@ def f_save():
         # show message box
         msg = QMessageBox()
         msg.setWindowTitle("Success")
-        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
+        msg.setWindowIcon(QIcon("./src/img/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("Data saved successfully.")
@@ -415,7 +456,7 @@ def f_save():
     else:
         msg = QMessageBox()
         msg.setWindowTitle("Warning")
-        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
+        msg.setWindowIcon(QIcon("./src/img/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Warning)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("No data to save.")
@@ -458,7 +499,7 @@ def f_group_change():
     global group_name, all_dirs_embs
 
     group_name = win.comboBox_group.currentText()
-    all_dirs_embs = gen_name_embs(group_student_embs[group_name])
+    all_dirs_embs = get_name_embs(group_student_embs[group_name])
 
     win.data_init = list(group_student_files[win.comboBox_group.currentText()].keys())
     win.model_init = QStringListModel()
@@ -502,7 +543,7 @@ def f_take_picture():
 
         # show message box
         msg = QMessageBox()
-        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
+        msg.setWindowIcon(QIcon("./src/img/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -519,7 +560,7 @@ def f_take_picture():
             cv2.imwrite(f"database/{group_name}/{selected_name}/data_{date.today().strftime('%Y_%m_%d')}_{time.strftime('%H_%M_%S')}.jpg", _frame)
             load_database()
             if group_student_files:
-                all_dirs_embs = gen_name_embs(group_student_embs[group_name])
+                all_dirs_embs = get_name_embs(group_student_embs[group_name])
         else:
             pass
 
@@ -540,7 +581,7 @@ def f_update():
     except requests.exceptions.RequestException as e:
         msg = QMessageBox()
         msg.setWindowTitle("Error")
-        msg.setWindowIcon(QIcon("./resource/my_logo.png"))
+        msg.setWindowIcon(QIcon("./src/img/my_logo.png"))
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowFlags(msg.windowFlags() | Qt.WindowStaysOnTopHint)
         msg.setText("Failed to fetch update files. \nPlease check your internet connection.")
@@ -610,6 +651,7 @@ win.pushButton_update.clicked.connect(f_update)
 app.exec()
 ########## __________ ##########
 
+
 ########## auto save ##########
 pickle.dump(similarity_threshold, open("resource/similarity_threshold.pkl", "wb"))
 ########## __________ ##########
@@ -621,3 +663,4 @@ cap.release()
 win = None
 app = None
 ########## __________ ##########
+

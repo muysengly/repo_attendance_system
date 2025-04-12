@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '025.ui'
+# Form implementation generated from reading ui file 'src/gui/026.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -70,11 +70,11 @@ class Ui_MainWindow(object):
         self.label_4.setFont(font)
         self.label_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_4.setObjectName("label_4")
-        self.label_logo_itc = QtWidgets.QLabel(self.centralwidget)
-        self.label_logo_itc.setGeometry(QtCore.QRect(10, 10, 100, 100))
-        self.label_logo_itc.setFrameShape(QtWidgets.QFrame.Box)
-        self.label_logo_itc.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_logo_itc.setObjectName("label_logo_itc")
+        self.label_logo = QtWidgets.QLabel(self.centralwidget)
+        self.label_logo.setGeometry(QtCore.QRect(10, 10, 100, 100))
+        self.label_logo.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label_logo.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_logo.setObjectName("label_logo")
         self.label_version = QtWidgets.QLabel(self.centralwidget)
         self.label_version.setGeometry(QtCore.QRect(850, 40, 400, 30))
         font = QtGui.QFont()
@@ -119,11 +119,6 @@ class Ui_MainWindow(object):
         self.label_2.setGeometry(QtCore.QRect(0, 650, 1270, 20))
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
-        self.label_logo_gtr = QtWidgets.QLabel(self.centralwidget)
-        self.label_logo_gtr.setGeometry(QtCore.QRect(120, 10, 100, 100))
-        self.label_logo_gtr.setFrameShape(QtWidgets.QFrame.Box)
-        self.label_logo_gtr.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_logo_gtr.setObjectName("label_logo_gtr")
         self.pushButton_capture = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_capture.setGeometry(QtCore.QRect(240, 605, 200, 40))
         font = QtGui.QFont()
@@ -148,12 +143,11 @@ class Ui_MainWindow(object):
         self.pushButton_reset.setText(_translate("MainWindow", "Reset"))
         self.label_3.setText(_translate("MainWindow", "Presented"))
         self.label_4.setText(_translate("MainWindow", "Attendance System"))
-        self.label_logo_itc.setText(_translate("MainWindow", "LOGO"))
+        self.label_logo.setText(_translate("MainWindow", "LOGO"))
         self.label_version.setText(_translate("MainWindow", "Version"))
         self.label_developer.setText(_translate("MainWindow", "Developer"))
         self.label.setText(_translate("MainWindow", "Threshold [%]:"))
         self.label_2.setText(_translate("MainWindow", "🙏 Thank to: Lokru PO Kimtho, Lokru SRENG Sokchenda, Lokru PEC Rathana, Lokru HEL Chanthan, and 7th generation GTR students 🙏"))
-        self.label_logo_gtr.setText(_translate("MainWindow", "LOGO"))
         self.pushButton_capture.setText(_translate("MainWindow", "Register"))
         self.pushButton_update.setText(_translate("MainWindow", "Check Update"))
 

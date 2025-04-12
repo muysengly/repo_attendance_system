@@ -8,14 +8,15 @@ __tmp__/
 setup_offline/
 venv/
 
-database/Group GTR I3/
-database/**/*.jpg
+data/Group GTR I3/
+data/**/*.jpg
 
 result/*.csv
-log/*.jpg
+result/log/*.jpg
 
 resource/windows/
 resource/*.ui
+local/*.pkl
 
 *.ipynb
 *.ui
