@@ -3,7 +3,6 @@
 
 import os
 
-main = "./gui/login/controller.py"
-# main = "./gui/register/controller.py"
+os.chdir("./resource/view_controller/scene_1_form/")
 
-os.system(f"python {main}")
+os.system("python Controller.py")
