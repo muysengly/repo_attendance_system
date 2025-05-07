@@ -89,4 +89,4 @@ database/
 
 ### 6.1. Run The Project
 
-- **Run**: `python main.py`
+- **Run**: `python Main.py`
