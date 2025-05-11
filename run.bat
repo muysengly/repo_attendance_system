@@ -2,4 +2,4 @@
 
 call venv\Scripts\activate
 
-start /min cmd /c python src/app.py
+start /min cmd /c python Main.py
