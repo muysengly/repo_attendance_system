@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>370</y>
+      <y>400</y>
       <width>320</width>
       <height>240</height>
      </rect>
@@ -134,12 +134,12 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_update_image_1">
+   <widget class="QPushButton" name="pushButton_upload_image_1">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>550</x>
       <y>320</y>
-      <width>221</width>
+      <width>140</width>
       <height>40</height>
      </rect>
     </property>
@@ -149,25 +149,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Update Image #1</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_update_image_2">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>620</y>
-      <width>221</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Update Image #2</string>
+     <string>Upload</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_group">
@@ -183,6 +165,96 @@
      <font>
       <pointsize>12</pointsize>
      </font>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_take_photo_1">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>320</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Take Photo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_upload_image_2">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>650</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Upload</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_take_photo_2">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>650</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Take Photo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_clear_image_1">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>70</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_clear_image_2">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>400</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>X</string>
     </property>
    </widget>
   </widget>

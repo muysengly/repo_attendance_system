@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO: 
@@ -12,7 +12,7 @@
 # - 
 
 
-# In[12]:
+# In[2]:
 
 
 ########## __________ ##########
@@ -25,7 +25,7 @@
 ########## __________ ##########
 
 
-# In[13]:
+# In[3]:
 
 
 import os
@@ -37,7 +37,7 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
 
 
-# In[14]:
+# In[4]:
 
 
 ########## import library ##########
@@ -62,7 +62,7 @@ from View import Ui_MainWindow
 ########## __________ ##########
 
 
-# In[15]:
+# In[5]:
 
 
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -70,7 +70,7 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
 
-# In[16]:
+# In[6]:
 
 
 ########## initial variable ##########
@@ -93,7 +93,7 @@ else:
 ########## __________ ##########
 
 
-# In[17]:
+# In[7]:
 
 
 ########## define insightface ##########
@@ -102,7 +102,7 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 ########## __________ ##########
 
 
-# In[18]:
+# In[8]:
 
 
 # utility functions
@@ -226,7 +226,7 @@ cameras = get_list_camera_devices()
 cap = cv2.VideoCapture(0)
 
 
-# In[19]:
+# In[9]:
 
 
 def load_database():
@@ -271,7 +271,7 @@ if group_student_files:
     all_dirs_embs = get_name_embs(group_student_embs[group_name])
 
 
-# In[20]:
+# In[10]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -401,7 +401,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[21]:
+# In[11]:
 
 
 ########## init objects ##########
