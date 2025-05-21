@@ -14,11 +14,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 620)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_camera = QtWidgets.QLabel(self.centralwidget)
-        self.label_camera.setGeometry(QtCore.QRect(80, 30, 640, 480))
+        self.label_camera.setGeometry(QtCore.QRect(70, 60, 640, 480))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label_camera.setFont(font)
@@ -26,11 +26,23 @@ class Ui_MainWindow(object):
         self.label_camera.setAlignment(QtCore.Qt.AlignCenter)
         self.label_camera.setObjectName("label_camera")
         self.pushButton_take_photo = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_take_photo.setGeometry(QtCore.QRect(300, 530, 200, 40))
+        self.pushButton_take_photo.setGeometry(QtCore.QRect(290, 560, 200, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.pushButton_take_photo.setFont(font)
         self.pushButton_take_photo.setObjectName("pushButton_take_photo")
+        self.comboBox_camera = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_camera.setGeometry(QtCore.QRect(510, 10, 200, 40))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.comboBox_camera.setFont(font)
+        self.comboBox_camera.setObjectName("comboBox_camera")
+        self.pushButton_back = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_back.setGeometry(QtCore.QRect(20, 10, 120, 40))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.pushButton_back.setFont(font)
+        self.pushButton_back.setObjectName("pushButton_back")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -40,7 +52,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_camera.setText(_translate("MainWindow", "TextLabel"))
-        self.pushButton_take_photo.setText(_translate("MainWindow", "Take Photo"))
+        self.pushButton_take_photo.setText(_translate("MainWindow", " Take Photo"))
+        self.pushButton_back.setText(_translate("MainWindow", " Back"))
 
 
 if __name__ == "__main__":
