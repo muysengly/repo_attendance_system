@@ -85,7 +85,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[8]:
 
 
 app = QApplication([])

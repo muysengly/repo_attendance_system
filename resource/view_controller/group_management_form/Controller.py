@@ -89,7 +89,10 @@ def on_data_changed():
     if win.listView_group.selectedIndexes():
         selected = win.listView_group.selectedIndexes()[0]
         if selected.data() == "":
-            win.listView_group.model().setData(selected, _name)
+            # win.listView_group.model().setData(selected, _name)
+            win.listView_group.model().removeRow(selected.row())
+            group_names.pop(selected.row())
+            os.remove(os.path.join(path_depth + "resource/database/", _name + ".pkl"))
         elif selected.data() != _name:
             win.listView_group.model().setData(selected, selected.data())
             os.rename(
@@ -133,11 +136,12 @@ def f_add():
         win.listView_group.model().insertRow(win.listView_group.model().rowCount())
         index = win.listView_group.model().index(win.listView_group.model().rowCount() - 1)
         win.listView_group.model().setData(index, text)
-        print(f"Added: {text}")
+        # print(f"Added: {text}")
 
         pickle.dump([], open(os.path.join(path_depth + "resource/database/", text + ".pkl"), "wb"))
 
     group_names = win.listView_group.model().stringList()
+    win.lineEdit_group_name.clear()
 
 
 win.pushButton_add.clicked.connect(f_add)
