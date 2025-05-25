@@ -77,14 +77,13 @@ app = QApplication([])
 win = Window()
 
 
-
-
 def on_manage_button_clicked():
     win.hide()
     os.system("python " + path_depth + "resource/view_controller/select_manage_form/Controller.py")
 
     group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
     group_names = [name.split("\\")[-1][:-4] for name in group_paths]
+    win.comboBox_group_name.clear()
     win.comboBox_group_name.addItems(group_names)
 
     win.show()
@@ -93,18 +92,14 @@ def on_manage_button_clicked():
 win.pushButton_manage.clicked.connect(on_manage_button_clicked)
 
 
-
-
 def on_check_attendance_button_clicked():
     win.hide()
     group_name = win.comboBox_group_name.currentText()
     pickle.dump(group_name, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
     os.system("python " + path_depth + "resource/view_controller/check_attendance_form/Controller.py")
 
-
-
-
     win.show()
+
 
 win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_clicked)
 
