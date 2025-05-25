@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -22,6 +22,10 @@ path_depth = "../../../"  # adjust the current working directory
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 # In[3]:
@@ -66,7 +70,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -78,6 +82,11 @@ win = Window()
 def on_manage_button_clicked():
     win.hide()
     os.system("python " + path_depth + "resource/view_controller/select_manage_form/Controller.py")
+
+    group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
+    group_names = [name.split("\\")[-1][:-4] for name in group_paths]
+    win.comboBox_group_name.addItems(group_names)
+
     win.show()
 
 
@@ -91,6 +100,10 @@ def on_check_attendance_button_clicked():
     group_name = win.comboBox_group_name.currentText()
     pickle.dump(group_name, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
     os.system("python " + path_depth + "resource/view_controller/check_attendance_form/Controller.py")
+
+
+
+
     win.show()
 
 win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_clicked)
