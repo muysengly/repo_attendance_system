@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[1]:
+
+
+# TODO: 
+# - 
+# - 
+# - 
+# - 
+# - 
+
+
 # In[ ]:
 
 
@@ -12,18 +23,22 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
 
+os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+os.environ["QT_SCALE_FACTOR"] = "1"
 
-# In[2]:
+
+# In[3]:
 
 
 from View import Ui_MainWindow
 
-from PyQt5.QtCore import QStringListModel, QTimer, Qt
-from PyQt5.QtGui import QImage, QPixmap, QIcon
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication, QLineEdit
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 
-# In[3]:
+# In[4]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -37,7 +52,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[4]:
+# In[5]:
 
 
 app = QApplication([])
@@ -46,3 +61,4 @@ win = Window()
 
 app.exec_()
 app = None
+

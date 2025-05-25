@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -22,6 +22,11 @@ path_depth = "../../../"  # adjust the current working directory
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+
+os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+os.environ["QT_SCALE_FACTOR"] = "1"
 
 
 # In[3]:
@@ -51,10 +56,14 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 # In[ ]:
 
 
+
+
+
 # In[5]:
 
 
 pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+
 
 
 # In[6]:
@@ -78,10 +87,17 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
+
 # In[ ]:
 
 
+
+
+
 # In[ ]:
+
+
+
 
 
 # In[7]:
@@ -94,6 +110,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Take Photo Form")
+
 
         self.comboBox_camera.addItems(cameras)
 
@@ -154,6 +171,9 @@ def take_photo():
     _, frame = cap.read()
     frame = cv2.flip(frame, 1)
 
+
+
+
     image = np.array(frame)
     pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
     win.close()
@@ -162,13 +182,14 @@ def take_photo():
 win.pushButton_take_photo.clicked.connect(take_photo)
 
 
+
 def f_camera_change():
     global cap
     cap.release()
     cap = cv2.VideoCapture(win.comboBox_camera.currentIndex())
 
-
 win.comboBox_camera.currentIndexChanged.connect(f_camera_change)
+
 
 
 def on_button_back_clicked():
@@ -188,3 +209,7 @@ cap.release()
 
 
 # In[ ]:
+
+
+
+
