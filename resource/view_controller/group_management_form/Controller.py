@@ -39,16 +39,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-import glob
-import pickle
-
-
-# In[ ]:
-
-
-
-
-
 # In[4]:
 
 
@@ -58,9 +48,6 @@ sys.path.append(path_depth)
 from resource.utility.Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
-
-group_names = db.read_table()
-group_names
 
 
 # In[5]:
@@ -74,13 +61,12 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Group Management Form")
 
-
-        self.listView_group.setModel(QStringListModel(group_names))    
+        self.listView_group.setModel(QStringListModel(db.read_table()))    
 
         self.show()
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])
@@ -93,37 +79,58 @@ win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 _name = ""  # previous name of the selected item
 
 
+def f_add():
+    win.listView_group.clearSelection()
+
+    text = win.lineEdit_group_name.text()
+    if text is not None:
+        text = text.strip()
+        if text.upper() in db.read_table():
+            QMessageBox.warning(win, "Warning", "Group name already exists!")
+        else:
+            win.listView_group.model().insertRow(win.listView_group.model().rowCount())
+            index = win.listView_group.model().index(win.listView_group.model().rowCount() - 1)
+            win.listView_group.model().setData(index, text.upper())
+            db.create_table(text.upper())
+
+    win.lineEdit_group_name.clear()
+
+
+win.pushButton_add.clicked.connect(f_add)
+win.lineEdit_group_name.returnPressed.connect(f_add)
+
+
 def on_double_clicked():
     global _name
     if win.listView_group.selectedIndexes():
         seleted = win.listView_group.selectedIndexes()[0]
         _name = seleted.data()
-        print(f"{seleted.row()} : {seleted.data()}")
 
 
 win.listView_group.doubleClicked.connect(on_double_clicked)
 
 
-# TODO: check duplicate names
 def on_data_changed():
-    # global group_names
     if win.listView_group.selectedIndexes():
         selected = win.listView_group.selectedIndexes()[0]
-        if selected.data() == "":
+
+        if selected.data().strip() == "":
             win.listView_group.model().removeRow(selected.row())
-            # group_names.pop(selected.row())
             db.delete_table(_name)
-        elif selected.data() != _name:
-            win.listView_group.model().setData(selected, selected.data())
-            db.update_table(_name, selected.data())
-    # group_names = win.listView_group.model().stringList()
+
+        elif selected.data().strip().upper() in db.read_table() and selected.data().strip() != _name:
+            win.listView_group.model().setData(selected, _name)
+            QMessageBox.warning(win, "Warning", "Group name already exists!")
+
+        elif selected.data().upper() != _name:
+            win.listView_group.model().setData(selected, selected.data().strip().upper())
+            db.update_table(_name, selected.data().strip().upper())
 
 
 win.listView_group.model().dataChanged.connect(on_data_changed)
 
 
 def context_menu_event(point):
-    # global group_names
 
     index = win.listView_group.indexAt(point)
     if index.isValid():
@@ -135,35 +142,10 @@ def context_menu_event(point):
             name = index.data()
             win.listView_group.model().removeRow(index.row())
             db.delete_table(name)
-            # group_names = win.listView_group.model().stringList()
 
 
 win.listView_group.setContextMenuPolicy(Qt.CustomContextMenu)
 win.listView_group.customContextMenuRequested.connect(context_menu_event)
-
-
-def f_add():
-    # global group_names
-
-    win.listView_group.clearSelection()
-
-    text = win.lineEdit_group_name.text()
-
-    if text is not None:
-        if text not in db.read_table():
-            win.listView_group.model().insertRow(win.listView_group.model().rowCount())
-            index = win.listView_group.model().index(win.listView_group.model().rowCount() - 1)
-            win.listView_group.model().setData(index, text)
-            db.create_table(text)
-            # group_names = win.listView_group.model().stringList()
-        else:
-            QMessageBox.warning(win, "Warning", "Group name already exists!")
-
-    win.lineEdit_group_name.clear()
-
-
-win.pushButton_add.clicked.connect(f_add)
-win.lineEdit_group_name.returnPressed.connect(f_add)
 
 
 def on_button_back_clicked():
@@ -175,10 +157,4 @@ win.pushButton_back.clicked.connect(on_button_back_clicked)
 
 app.exec_()
 app = None
-
-
-# In[ ]:
-
-
-
 

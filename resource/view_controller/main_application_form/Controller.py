@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[7]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[8]:
 
 
 import os
@@ -28,7 +28,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -37,11 +37,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import glob
 import pickle
 
 
-# In[4]:
+# In[10]:
 
 
 import sys
@@ -52,7 +51,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[11]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -72,7 +71,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[12]:
 
 
 app = QApplication([])
@@ -113,6 +112,10 @@ def on_check_attendance_button_clicked():
 win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_clicked)
 
 
+def on_click_update_button():
+    QMessageBox.information(win, "Update", "This feature is not implemented yet. \nPlease check back later!.")
+
+win.pushButton_check_update.clicked.connect(on_click_update_button)
 
 
 

@@ -3,3 +3,4 @@ venv/
 __pycache__/
 __setup__/
 log/*.jpg
+database.sqlite

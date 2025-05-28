@@ -95,7 +95,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[9]:
 
 
 app = QApplication([])
@@ -116,11 +116,12 @@ def on_button_add_clicked():
 
     text = win.lineEdit_name.text()
     if text is not None:
-        if text not in db.read_face_names(group_name):
+        text = text.strip()
+        if text.upper() not in db.read_face_names(group_name):
             win.listView_name.model().insertRow(win.listView_name.model().rowCount())
             index = win.listView_name.model().index(win.listView_name.model().rowCount() - 1)
-            win.listView_name.model().setData(index, text)
-            db.create_face_name(group_name, text)
+            win.listView_name.model().setData(index, text.upper())
+            db.create_face_name(group_name, text.upper())
         else:
             QMessageBox.warning(win, "Warning", "Name already exists!")
 
@@ -137,7 +138,6 @@ def on_listview_double_clicked():
     if win.listView_name.selectedIndexes():
         seleted = win.listView_name.selectedIndexes()[0]
         _name = seleted.data()
-        print(f"{seleted.row()} : {seleted.data()}")
 
 
 win.listView_name.doubleClicked.connect(on_listview_double_clicked)
@@ -146,12 +146,18 @@ win.listView_name.doubleClicked.connect(on_listview_double_clicked)
 def on_data_changed():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
-        if selected.data() == "":
+
+        if selected.data().strip() == "":
             win.listView_name.model().removeRow(selected.row())
             db.delete_face_name(group_name, _name)
-        elif selected.data() != _name:
-            win.listView_name.model().setData(selected, selected.data())
-            db.update_face_name(group_name, _name, selected.data())
+
+        elif selected.data().strip().upper() in db.read_face_names(group_name) and selected.data().strip() != _name:
+            QMessageBox.warning(win, "Warning", "Name already exists!")
+            win.listView_name.model().setData(selected, _name)
+
+        elif selected.data().upper() != _name:
+            win.listView_name.model().setData(selected, selected.data().strip().upper())
+            db.update_face_name(group_name, _name, selected.data().strip().upper())
 
 
 win.listView_name.model().dataChanged.connect(on_data_changed)
@@ -392,4 +398,22 @@ app.exec_()
 
 
 app = None
+
+
+# In[10]:
+
+
+x = "   name   "
+
+
+# In[11]:
+
+
+x.strip()
+
+
+# In[ ]:
+
+
+
 
