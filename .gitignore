@@ -1,5 +1,5 @@
 .git
 venv/
 __pycache__/
-resource/database/*.pkl
 __setup__/
+log/*.jpg

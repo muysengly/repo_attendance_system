@@ -72,11 +72,18 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
 win = Window()
+
+win.label_version.setText("Version: 2.0.2")
+
+win.pushButton_check_attendance.setIcon(QIcon(f"{path_depth}resource/asset/face-scanner.png"))
+win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.png"))
+win.pushButton_check_update.setIcon(QIcon(f"{path_depth}resource/asset/refresh.png"))
+
 
 
 def on_manage_button_clicked():
@@ -106,11 +113,7 @@ def on_check_attendance_button_clicked():
 win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_clicked)
 
 
-win.pushButton_check_attendance.setIcon(QIcon(f"{path_depth}resource/asset/face-scanner.png"))
-win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.png"))
-win.pushButton_check_update.setIcon(QIcon(f"{path_depth}resource/asset/refresh.png"))
 
-win.label_version.setText("Version: 2.0.1")
 
 
 app.exec_()

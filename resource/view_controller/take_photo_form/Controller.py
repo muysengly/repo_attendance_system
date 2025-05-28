@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -42,25 +42,22 @@ from PyQt5.QtWidgets import *
 
 
 import cv2
-# import pickle
 import numpy as np
 
 
-# In[4]:
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[6]:
+# In[ ]:
 
 
 def get_list_camera_devices():
-
     index = 0
     cameras = []
-
     while True:
         cap = cv2.VideoCapture(index)
         if not cap.isOpened():
@@ -70,19 +67,13 @@ def get_list_camera_devices():
         index += 1
     return cameras
 
-
 cameras = get_list_camera_devices()
-
 
 
 # In[ ]:
 
 
-
-
-
-# In[7]:
-
+cap = cv2.VideoCapture(0)
 
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
@@ -92,11 +83,8 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Take Photo Form")
 
-
         self.comboBox_camera.addItems(cameras)
-
         self.faces = []
-
         self.SKIP_FRAMES = 10
         self.frame_count = 0
 
@@ -143,7 +131,6 @@ class Window(Ui_MainWindow, QMainWindow):
 # In[ ]:
 
 
-cap = cv2.VideoCapture(0)
 app = QApplication([])
 win = Window()
 
