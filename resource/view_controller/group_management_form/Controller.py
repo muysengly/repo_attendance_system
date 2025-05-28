@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -43,11 +43,23 @@ import glob
 import pickle
 
 
+# In[ ]:
+
+
+
+
+
 # In[4]:
 
 
-group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
-group_names = [name.split("\\")[-1][:-4] for name in group_paths]
+import sys
+
+sys.path.append(path_depth)
+from resource.utility.Database import DataBase
+
+db = DataBase(path_depth + "database.sqlite")
+
+group_names = db.read_table()
 group_names
 
 
@@ -68,12 +80,15 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
 win = Window()
 
+
+win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add_group.png"))
+win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 _name = ""  # previous name of the selected item
 
@@ -89,30 +104,26 @@ def on_double_clicked():
 win.listView_group.doubleClicked.connect(on_double_clicked)
 
 
+# TODO: check duplicate names
 def on_data_changed():
-    global group_names
+    # global group_names
     if win.listView_group.selectedIndexes():
         selected = win.listView_group.selectedIndexes()[0]
         if selected.data() == "":
-            # win.listView_group.model().setData(selected, _name)
             win.listView_group.model().removeRow(selected.row())
-            group_names.pop(selected.row())
-            os.remove(os.path.join(path_depth + "resource/database/", _name + ".pkl"))
+            # group_names.pop(selected.row())
+            db.delete_table(_name)
         elif selected.data() != _name:
             win.listView_group.model().setData(selected, selected.data())
-            os.rename(
-                os.path.join(path_depth + "resource/database/", _name + ".pkl"),
-                os.path.join(path_depth + "resource/database/", selected.data() + ".pkl"),
-            )
-            # print(_name + " --> " + selected.data())
-    group_names = win.listView_group.model().stringList()
+            db.update_table(_name, selected.data())
+    # group_names = win.listView_group.model().stringList()
 
 
 win.listView_group.model().dataChanged.connect(on_data_changed)
 
 
 def context_menu_event(point):
-    global group_names
+    # global group_names
 
     index = win.listView_group.indexAt(point)
     if index.isValid():
@@ -123,29 +134,31 @@ def context_menu_event(point):
         if action == delete_action:
             name = index.data()
             win.listView_group.model().removeRow(index.row())
-            os.remove(os.path.join(path_depth + "resource/database/", name + ".pkl"))
-            group_names = win.listView_group.model().stringList()
-            # print(f"Deleted: {name}")
+            db.delete_table(name)
+            # group_names = win.listView_group.model().stringList()
+
 
 win.listView_group.setContextMenuPolicy(Qt.CustomContextMenu)
 win.listView_group.customContextMenuRequested.connect(context_menu_event)
 
 
 def f_add():
-    global group_names
+    # global group_names
 
     win.listView_group.clearSelection()
 
     text = win.lineEdit_group_name.text()
-    if text:
-        win.listView_group.model().insertRow(win.listView_group.model().rowCount())
-        index = win.listView_group.model().index(win.listView_group.model().rowCount() - 1)
-        win.listView_group.model().setData(index, text)
-        # print(f"Added: {text}")
 
-        pickle.dump([], open(os.path.join(path_depth + "resource/database/", text + ".pkl"), "wb"))
+    if text is not None:
+        if text not in db.read_table():
+            win.listView_group.model().insertRow(win.listView_group.model().rowCount())
+            index = win.listView_group.model().index(win.listView_group.model().rowCount() - 1)
+            win.listView_group.model().setData(index, text)
+            db.create_table(text)
+            # group_names = win.listView_group.model().stringList()
+        else:
+            QMessageBox.warning(win, "Warning", "Group name already exists!")
 
-    group_names = win.listView_group.model().stringList()
     win.lineEdit_group_name.clear()
 
 
@@ -153,25 +166,15 @@ win.pushButton_add.clicked.connect(f_add)
 win.lineEdit_group_name.returnPressed.connect(f_add)
 
 
-win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add_group.png"))
-
-win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
-
-
 def on_button_back_clicked():
     win.close()
+
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
 
 
 app.exec_()
 app = None
-
-
-# In[7]:
-
-
-group_names
 
 
 # In[ ]:

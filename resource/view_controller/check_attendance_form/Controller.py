@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis
@@ -48,29 +48,47 @@ from datetime import date
 import csv
 
 
-# In[4]:
+# In[ ]:
+
+
+import sys
+
+sys.path.append(path_depth)
+from resource.utility.Database import DataBase
+
+db = DataBase(path_depth + "database.sqlite")
+
+
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[5]:
+# In[ ]:
 
 
-# pickle.dump("GTR I3 ALL", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
+# pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
 group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", "rb"))
 # group_name
 
 
-# In[6]:
+# In[ ]:
 
 
-database = pickle.load(open(path_depth + "resource/database/" + group_name + ".pkl", "rb"))
+face_names = db.read_face_names(group_name)  # read the database from the sqlite file
+# face_names
+
+
+# In[ ]:
+
+
+database = db.read_name_emb1_emb2(group_name)
 # database
 
 
-# In[7]:
+# In[ ]:
 
 
 # pickle.dump(70, open(path_depth + "resource/variable/_threshold.pkl", "wb"))
@@ -78,7 +96,7 @@ threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "r
 # threshold
 
 
-# In[8]:
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -86,14 +104,14 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# emb1 = database[0][1][1]
-# emb2 = database[1][1][1]
+# emb_1 = db.read_emb_1(group_name, face_names[0])  # read the first face embedding
+# emb_2 = db.read_emb_1(group_name, face_names[1])  # read the second face embedding
 
-# similarity = compare_faces_cosine(emb1, emb2)
+# similarity = compare_faces_cosine(emb_1, emb_2)
 # similarity
 
 
-# In[9]:
+# In[ ]:
 
 
 def get_list_camera_devices():
@@ -112,14 +130,13 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
-
-# In[10]:
+# In[ ]:
 
 
 attendance = []
 
 
-# In[11]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -130,10 +147,8 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Check Attendance Form")
 
-
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.label_gtr_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/gtr_logo.png").scaled(self.label_gtr_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
 
         self.comboBox_camera.addItems(cameras)
 
@@ -160,7 +175,7 @@ class Window(Ui_MainWindow, QMainWindow):
 
                 box = face.bbox.astype(int)
 
-                if (box[2] - box[0]) < 100 or (box[3] - box[1]) < 100: # skip small faces
+                if (box[2] - box[0]) < 100 or (box[3] - box[1]) < 100:  # skip small faces
                     cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
                     cv2.putText(img=frame, text="Too small!", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
                     continue
@@ -170,7 +185,7 @@ class Window(Ui_MainWindow, QMainWindow):
                     cv2.putText(img=frame, text="No database!", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
                     continue
 
-                scores = [max(compare_faces_cosine(face.embedding, data[1][1]) if data[1][1] is not None else 0, compare_faces_cosine(face.embedding, data[2][1]) if data[2][1] is not None else 0) for data in database]
+                scores = [max(compare_faces_cosine(face.embedding, data[1]) if data[1] is not None else 0, compare_faces_cosine(face.embedding, data[2]) if data[2] is not None else 0) for data in database]
 
                 if np.max(scores) > threshold / 100:
 
@@ -178,16 +193,12 @@ class Window(Ui_MainWindow, QMainWindow):
                     cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {database[np.argmax(scores)][0]}", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
                     cv2.putText(img=frame, text="Attended!", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
-
                     if database[np.argmax(scores)][0] not in self.listView_attd.model().stringList():
                         self.listView_attd.model().insertRow(self.listView_attd.model().rowCount())
                         self.listView_attd.model().setData(self.listView_attd.model().index(self.listView_attd.model().rowCount() - 1), database[np.argmax(scores)][0])
                         self.listView_attd.scrollToBottom()
                         attendance.append([database[np.argmax(scores)][0], f"{time.strftime("%H:%M:%S")}"])
                         cv2.imwrite(f"{path_depth}log/log_{group_name}_{database[np.argmax(scores)][0]}_{date.today().strftime('%Y%m%d')}{time.strftime('%H%M%S')}.jpg", frame)
-
-
-
 
                 else:
                     cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
@@ -200,7 +211,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[12]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -210,8 +221,9 @@ win = Window()
 
 
 win.spinBox_threshold.setValue(threshold)
-
 win.label_group_name.setText(group_name)
+
+win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 
 def save_attendance():
@@ -253,11 +265,9 @@ def on_button_back_clicked():
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
-win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 
 app.exec_()
-
 app = None
 cap.release()
 

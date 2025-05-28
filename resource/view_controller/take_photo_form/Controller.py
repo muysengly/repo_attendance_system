@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis
@@ -42,7 +42,7 @@ from PyQt5.QtWidgets import *
 
 
 import cv2
-import pickle
+# import pickle
 import numpy as np
 
 
@@ -51,19 +51,6 @@ import numpy as np
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
-
-
-# In[ ]:
-
-
-
-
-
-# In[5]:
-
-
-pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
-
 
 
 # In[6]:
@@ -85,12 +72,6 @@ def get_list_camera_devices():
 
 
 cameras = get_list_camera_devices()
-
-
-
-# In[ ]:
-
-
 
 
 
@@ -159,7 +140,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[8]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -171,16 +152,13 @@ def take_photo():
     _, frame = cap.read()
     frame = cv2.flip(frame, 1)
 
-
-
-
     image = np.array(frame)
-    pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+    # pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+    cv2.imwrite(path_depth + "resource/variable/_photo.jpg", image)
     win.close()
 
 
 win.pushButton_take_photo.clicked.connect(take_photo)
-
 
 
 def f_camera_change():
@@ -188,8 +166,8 @@ def f_camera_change():
     cap.release()
     cap = cv2.VideoCapture(win.comboBox_camera.currentIndex())
 
-win.comboBox_camera.currentIndexChanged.connect(f_camera_change)
 
+win.comboBox_camera.currentIndexChanged.connect(f_camera_change)
 
 
 def on_button_back_clicked():
@@ -197,9 +175,9 @@ def on_button_back_clicked():
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
+
+
 win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
-
-
 win.pushButton_take_photo.setIcon(QIcon(f"{path_depth}resource/asset/photo-camera.png"))
 
 

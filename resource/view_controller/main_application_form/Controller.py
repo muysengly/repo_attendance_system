@@ -38,19 +38,21 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import glob
-
 import pickle
 
 
 # In[4]:
 
 
-group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
-group_names = [name.split("\\")[-1][:-4] for name in group_paths]
-group_names
+import sys
+
+sys.path.append(path_depth)
+from resource.utility.Database import DataBase
+
+db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -61,16 +63,16 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Main Form")
 
-
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.label_gtr_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/gtr_logo.png").scaled(self.label_gtr_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-        self.comboBox_group_name.addItems(group_names)
+        self.comboBox_group_name.clear()
+        self.comboBox_group_name.addItems(db.read_table())
 
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -79,12 +81,10 @@ win = Window()
 
 def on_manage_button_clicked():
     win.hide()
-    os.system("python " + path_depth + "resource/view_controller/select_manage_form/Controller.py")
 
-    group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
-    group_names = [name.split("\\")[-1][:-4] for name in group_paths]
+    os.system("python " + path_depth + "resource/view_controller/select_manage_form/Controller.py")
     win.comboBox_group_name.clear()
-    win.comboBox_group_name.addItems(group_names)
+    win.comboBox_group_name.addItems(db.read_table())
 
     win.show()
 

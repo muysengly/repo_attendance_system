@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -39,22 +39,20 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import pickle
-import glob
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
 
 # In[4]:
+
+
+import sys
+
+sys.path.append(path_depth)
+from resource.utility.Database import DataBase
+
+db = DataBase(path_depth + "database.sqlite")
+
+
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -65,41 +63,29 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Template Form")
 
-
+        self.comboBox_group_names.clear()
+        self.comboBox_group_names.addItems(db.read_table())
 
         self.show()
 
 
-# In[5]:
+# In[ ]:
 
 
 app = QApplication([])
 win = Window()
 
 
-group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
-group_names = [name.split("\\")[-1][:-4] for name in group_paths]
-win.comboBox_group_names.clear()
-win.comboBox_group_names.addItems(group_names)
-
-
-win.label_number_of_group.setText(f"In your database, there are {len(group_names)} groups.")
+win.label_number_of_group.setText(f"In your database, there are {len(db.read_table())} groups.")
 
 
 def on_button_manage_group_clicked():
-
-    global group_names
-
     win.hide()
 
     os.system("python " + path_depth + "resource/view_controller/group_management_form/Controller.py")
-
-    group_paths = glob.glob(os.path.join(path_depth + "resource/database/", "*.pkl"))
-    group_names = [name.split("\\")[-1][:-4] for name in group_paths]
     win.comboBox_group_names.clear()
-    win.comboBox_group_names.addItems(group_names)
-
-    win.label_number_of_group.setText(f"In your database, there are {len(group_names)} groups.")
+    win.comboBox_group_names.addItems(db.read_table())
+    win.label_number_of_group.setText(f"In your database, there are {len(db.read_table())} groups.")
 
     win.show()
 
@@ -108,12 +94,10 @@ win.pushButton_manage_group.clicked.connect(on_button_manage_group_clicked)
 
 
 def on_button_manage_person_clicked():
-    select = win.comboBox_group_names.currentText()
-
     win.hide()
 
+    select = win.comboBox_group_names.currentText()
     pickle.dump(select, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
-
     os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
 
     win.show()
