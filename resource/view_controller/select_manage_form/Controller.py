@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[ ]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -94,13 +94,15 @@ win.pushButton_manage_group.clicked.connect(on_button_manage_group_clicked)
 
 
 def on_button_manage_person_clicked():
-    win.hide()
+    if len(db.read_table()) > 0:
 
-    select = win.comboBox_group_names.currentText()
-    pickle.dump(select, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
-    os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
+        win.hide()
 
-    win.show()
+        select = win.comboBox_group_names.currentText()
+        pickle.dump(select, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
+        os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
+
+        win.show()
 
 
 win.pushButton_manage_person.clicked.connect(on_button_manage_person_clicked)

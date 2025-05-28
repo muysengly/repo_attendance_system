@@ -52,7 +52,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -72,7 +72,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])
@@ -93,12 +93,14 @@ win.pushButton_manage.clicked.connect(on_manage_button_clicked)
 
 
 def on_check_attendance_button_clicked():
-    win.hide()
-    group_name = win.comboBox_group_name.currentText()
-    pickle.dump(group_name, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
-    os.system("python " + path_depth + "resource/view_controller/check_attendance_form/Controller.py")
+    if len(db.read_table()) > 0:
+        win.hide()
 
-    win.show()
+        group_name = win.comboBox_group_name.currentText()
+        pickle.dump(group_name, open(path_depth + "resource/variable/_group_name.pkl", "wb"))
+        os.system("python " + path_depth + "resource/view_controller/check_attendance_form/Controller.py")
+
+        win.show()
 
 
 win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_clicked)
