@@ -84,7 +84,6 @@ win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.
 win.pushButton_check_update.setIcon(QIcon(f"{path_depth}resource/asset/refresh.png"))
 
 
-
 def on_manage_button_clicked():
     win.hide()
 
@@ -115,8 +114,8 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 def on_click_update_button():
     QMessageBox.information(win, "Update", "This feature is not implemented yet. \nPlease check back later!.")
 
-win.pushButton_check_update.clicked.connect(on_click_update_button)
 
+win.pushButton_check_update.clicked.connect(on_click_update_button)
 
 
 app.exec_()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[ ]:
+# In[3]:
 
 
 from insightface.app import FaceAnalysis
@@ -45,14 +45,14 @@ import cv2
 import numpy as np
 
 
-# In[ ]:
+# In[4]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[ ]:
+# In[5]:
 
 
 def get_list_camera_devices():
@@ -70,7 +70,7 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
-# In[ ]:
+# In[6]:
 
 
 cap = cv2.VideoCapture(0)
@@ -128,7 +128,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[7]:
 
 
 app = QApplication([])

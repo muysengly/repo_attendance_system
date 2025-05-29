@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -23,12 +23,16 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
 
 
+# In[ ]:
+
+
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis  # NOTE: this library need to import first
@@ -44,7 +48,7 @@ import pickle
 import numpy as np
 
 
-# In[4]:
+# In[ ]:
 
 
 import sys
@@ -55,14 +59,14 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[6]:
+# In[ ]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -70,20 +74,21 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[7]:
+# In[ ]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[8]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Face Management Form")
@@ -95,7 +100,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[9]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -161,6 +166,35 @@ def on_data_changed():
 
 
 win.listView_name.model().dataChanged.connect(on_data_changed)
+
+
+def on_listview_single_clicked():
+    if win.listView_name.selectedIndexes():
+        selected = win.listView_name.selectedIndexes()[0]
+
+        img_1 = db.read_image_1(group_name, selected.data())
+        if img_1 is not None and len(img_1) > 0:
+            img_1 = cv2.resize(img_1, (win.label_image_1.width(), win.label_image_1.height()))
+            img_1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2RGB)
+            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(img_1, cv2.COLOR_BGR2RGB).data, img_1.shape[1], img_1.shape[0], QImage.Format.Format_RGB888))
+            win.label_image_1.setPixmap(q_pixmap)
+
+        else:
+            win.label_image_1.clear()
+            win.label_image_1.setText("No Image #1")
+
+        img_2 = db.read_image_2(group_name, selected.data())
+        if img_2 is not None and len(img_2) > 0:
+            img_2 = cv2.resize(img_2, (win.label_image_2.width(), win.label_image_2.height()))
+            img_2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2RGB)
+            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(img_2, cv2.COLOR_BGR2RGB).data, img_2.shape[1], img_2.shape[0], QImage.Format.Format_RGB888))
+            win.label_image_2.setPixmap(q_pixmap)
+        else:
+            win.label_image_2.clear()
+            win.label_image_2.setText("No Image #2")
+
+
+win.listView_name.selectionModel().selectionChanged.connect(on_listview_single_clicked)
 
 
 def context_menu_event_name(point):
@@ -286,35 +320,6 @@ def on_button_upload_image_2_clicked():
 win.pushButton_upload_image_2.clicked.connect(on_button_upload_image_2_clicked)
 
 
-def on_listview_single_clicked():
-    if win.listView_name.selectedIndexes():
-        selected = win.listView_name.selectedIndexes()[0]
-
-        img_1 = db.read_image_1(group_name, selected.data())
-        if img_1 is not None and len(img_1) > 0:
-            img_1 = cv2.resize(img_1, (win.label_image_1.width(), win.label_image_1.height()))
-            img_1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2RGB)
-            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(img_1, cv2.COLOR_BGR2RGB).data, img_1.shape[1], img_1.shape[0], QImage.Format.Format_RGB888))
-            win.label_image_1.setPixmap(q_pixmap)
-
-        else:
-            win.label_image_1.clear()
-            win.label_image_1.setText("No Image #1")
-
-        img_2 = db.read_image_2(group_name, selected.data())
-        if img_2 is not None and len(img_2) > 0:
-            img_2 = cv2.resize(img_2, (win.label_image_2.width(), win.label_image_2.height()))
-            img_2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2RGB)
-            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(img_2, cv2.COLOR_BGR2RGB).data, img_2.shape[1], img_2.shape[0], QImage.Format.Format_RGB888))
-            win.label_image_2.setPixmap(q_pixmap)
-        else:
-            win.label_image_2.clear()
-            win.label_image_2.setText("No Image #2")
-
-
-win.listView_name.selectionModel().selectionChanged.connect(on_listview_single_clicked)
-
-
 def on_button_take_photo_1_clicked():
 
     if win.listView_name.selectedIndexes():
@@ -398,22 +403,4 @@ app.exec_()
 
 
 app = None
-
-
-# In[10]:
-
-
-x = "   name   "
-
-
-# In[11]:
-
-
-x.strip()
-
-
-# In[ ]:
-
-
-
 

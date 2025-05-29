@@ -15,6 +15,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 420)
+        MainWindow.setMinimumSize(QtCore.QSize(800, 420))
+        MainWindow.setMaximumSize(QtCore.QSize(800, 420))
+        MainWindow.setSizeIncrement(QtCore.QSize(800, 420))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton_check_attendance = QtWidgets.QPushButton(self.centralwidget)
