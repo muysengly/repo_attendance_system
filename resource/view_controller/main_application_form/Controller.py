@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[7]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[8]:
 
 
 import os
@@ -28,7 +28,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[9]:
 
 
 from View import Ui_MainWindow
@@ -40,7 +40,7 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[4]:
+# In[10]:
 
 
 import sys
@@ -51,7 +51,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[11]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -71,7 +71,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[12]:
 
 
 app = QApplication([])
