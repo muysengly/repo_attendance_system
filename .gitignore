@@ -17,7 +17,7 @@ resource/view_controller/_login_form/
 resource/view_controller/_old_application_form/
 resource/view_controller/_register_form/
 
-
+resource/variable/_photo.jpg
 .gitignore
 log/*.jpg
 database.sqlite
