@@ -55,38 +55,10 @@
 
 ---
 
-## Step 5: Configure Database
-
-### 5.1. Configure Database Folder
-
-- To set up the `database` folder, create empty subfolders for each `group name` and further subfolders within them for each `student name`.
-
-**Example**: Database folder structure
-
-```
-...
-database/
-├── MY GROUP A/
-│   ├── STUDENT A1/
-│   │   ├── image1.jpg
-│   │   ...
-│   ├── STUDENT A2/
-│   │   ├── image1.jpg
-│   │   ...
-├── MY GROUP B/
-│   ├── STUDENT B1/
-│   │   ├── image1.jpg
-│   │   ...
-│   ├── STUDENT B2/
-│   │   ├── image1.jpg
-│   │   ...
-...
-```
-
 ---
 
-## Step 6: Run The Project
+## Step 5: Run The Project
 
-### 6.1. Run The Project
+### 5.1. Run The Project
 
 - **Run**: `python Main.py`
