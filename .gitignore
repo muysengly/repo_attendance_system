@@ -3,6 +3,11 @@ venv/
 __pycache__/
 __setup__/
 __backup__/
+__learning__/
+__sample__/
+__teaching__/
+
+
 
 resource/view_controller/_add_new_data_form/
 resource/view_controller/_add_new_group_form/
@@ -10,6 +15,7 @@ resource/view_controller/_forget_password_form/
 resource/view_controller/_login_form/
 resource/view_controller/_old_application_form/
 resource/view_controller/_register_form/
+
 
 .gitignore
 log/*.jpg
