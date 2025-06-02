@@ -25,3 +25,6 @@ database.sqlite
 setup_offline_make.bat
 setup_offline.bat
 setup_online.bat
+setup_dev.bat
+run_dev.bat
+readme.ipynb
