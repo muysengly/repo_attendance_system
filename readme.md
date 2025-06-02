@@ -49,11 +49,9 @@
 
 ### 4.1. Run Bat File To Install Required Libraries
 
-- Run a file with name: `setup_online.bat`
+- Run a file with name: `setup.bat`
 
-**NOTE**: if you have problem with `setup_online.bat`, please contact me
-
----
+**NOTE**: if you have problem with `setup.bat`, please contact me
 
 ---
 
