@@ -24,3 +24,4 @@ database.sqlite
 
 setup_offline_make.bat
 setup_offline.bat
+setup_online.bat

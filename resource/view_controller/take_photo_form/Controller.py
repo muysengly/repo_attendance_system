@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -29,7 +29,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis
@@ -42,17 +42,18 @@ from PyQt5.QtWidgets import *
 
 
 import cv2
+import pickle
 import numpy as np
 
 
-# In[4]:
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[5]:
+# In[ ]:
 
 
 def get_list_camera_devices():
@@ -70,7 +71,7 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
-# In[6]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -128,7 +129,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[7]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -140,8 +141,8 @@ def take_photo():
     frame = cv2.flip(frame, 1)
 
     image = np.array(frame)
-    # pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
-    cv2.imwrite(path_depth + "resource/variable/_photo.jpg", image)
+    pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+
     win.close()
 
 

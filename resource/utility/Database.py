@@ -66,8 +66,13 @@ class DataBase:
 
     ####################____________________####################
 
-    def create_image_1(self, table_name, face_name, file_name):
+    def create_image_1_from_path(self, table_name, face_name, file_name):
         img_blob = open(file_name, "rb").read()
+        self.conn.execute(f"UPDATE '{table_name}' SET img_1 = ? WHERE name = ?;", (img_blob, face_name))
+        self.conn.commit()
+
+    def create_image_1_from_array(self, table_name, face_name, img_array):
+        img_blob = cv2.imencode(".jpg", img_array)[1].tobytes()
         self.conn.execute(f"UPDATE '{table_name}' SET img_1 = ? WHERE name = ?;", (img_blob, face_name))
         self.conn.commit()
 
@@ -142,8 +147,13 @@ class DataBase:
 
     ####################____________________####################
 
-    def create_image_2(self, table_name, face_name, file_name):
+    def create_image_2_from_path(self, table_name, face_name, file_name):
         img_blob = open(file_name, "rb").read()
+        self.conn.execute(f"UPDATE '{table_name}' SET img_2 = ? WHERE name = ?;", (img_blob, face_name))
+        self.conn.commit()
+
+    def create_image_2_from_array(self, table_name, face_name, img_array):
+        img_blob = cv2.imencode(".jpg", img_array)[1].tobytes()
         self.conn.execute(f"UPDATE '{table_name}' SET img_2 = ? WHERE name = ?;", (img_blob, face_name))
         self.conn.commit()
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -23,7 +23,7 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
 
 
-# In[ ]:
+# In[3]:
 
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
@@ -32,7 +32,7 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 
-# In[ ]:
+# In[4]:
 
 
 from insightface.app import FaceAnalysis  # NOTE: this library need to import first
@@ -48,7 +48,7 @@ import pickle
 import numpy as np
 
 
-# In[ ]:
+# In[5]:
 
 
 import sys
@@ -59,14 +59,14 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[6]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[ ]:
+# In[7]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -74,14 +74,14 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[ ]:
+# In[8]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[ ]:
+# In[9]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -235,7 +235,7 @@ def on_button_upload_image_1_clicked():
                 face = faces[0]
                 box = face.bbox.astype(int)
                 if (box[2] - box[0]) > 160 or (box[3] - box[1]) > 160:
-                    db.create_image_1(group_name, selected.data(), file_name)
+                    db.create_image_1_from_path(group_name, selected.data(), file_name)
                     db.create_emb_1(group_name, selected.data(), faces[0].embedding)
 
                     _image = cv2.resize(image, (win.label_image_1.width(), win.label_image_1.height()))
@@ -285,7 +285,7 @@ def on_button_upload_image_2_clicked():
                 box = face.bbox.astype(int)
                 if (box[2] - box[0]) > 160 or (box[3] - box[1]) > 160:
 
-                    db.create_image_2(group_name, selected.data(), file_name)
+                    db.create_image_2_from_path(group_name, selected.data(), file_name)
                     db.create_emb_2(group_name, selected.data(), faces[0].embedding)
 
                     _image = cv2.resize(image, (win.label_image_2.width(), win.label_image_2.height()))
@@ -327,10 +327,11 @@ def on_button_take_photo_1_clicked():
         win.hide()
         os.system("python " + path_depth + "resource/view_controller/take_photo_form/Controller.py")
 
-        photo = cv2.imread(path_depth + "resource/variable/_photo.jpg")
+        photo = pickle.load(open(path_depth + "resource/variable/_photo.pkl", "rb"))
 
-        db.create_image_1(group_name, selected.data(), path_depth + "resource/variable/_photo.jpg")
+        db.create_image_1_from_array(group_name, selected.data(), photo)
         db.create_emb_1(group_name, selected.data(), fa.get(photo)[0].embedding)
+
 
         _image = cv2.resize(photo, (win.label_image_1.width(), win.label_image_1.height()))
         q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
@@ -344,15 +345,13 @@ win.pushButton_take_photo_1.clicked.connect(on_button_take_photo_1_clicked)
 
 def on_button_take_photo_2_clicked():
     if win.listView_name.selectedIndexes():
-
         selected = win.listView_name.selectedIndexes()[0]
-
         win.hide()
-
         os.system("python " + path_depth + "resource/view_controller/take_photo_form/Controller.py")
 
-        photo = cv2.imread(path_depth + "resource/variable/_photo.jpg")
-        db.create_image_2(group_name, selected.data(), path_depth + "resource/variable/_photo.jpg")
+        photo = pickle.load(open(path_depth + "resource/variable/_photo.pkl", "rb"))
+
+        db.create_image_2_from_array(group_name, selected.data(), photo)
         db.create_emb_2(group_name, selected.data(), fa.get(photo)[0].embedding)
 
         _image = cv2.resize(photo, (win.label_image_2.width(), win.label_image_2.height()))
