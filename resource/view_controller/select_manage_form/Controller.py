@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -27,6 +27,7 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 import ctypes
 
@@ -56,7 +57,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -65,7 +66,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
-        self.setWindowTitle("Template Form")
+        self.setWindowTitle("Management Form")
 
         self.comboBox_group_names.clear()
         self.comboBox_group_names.addItems(db.read_table())

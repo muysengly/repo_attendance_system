@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -26,6 +26,7 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 import ctypes
 
