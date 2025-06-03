@@ -1,7 +1,7 @@
 @echo off
 
 @REM install dependencies
-py -3.12 -m pip install opencv-python insightface onnxruntime pyqt5
+pip install opencv-python insightface onnxruntime pyqt5
 
 
 echo.
