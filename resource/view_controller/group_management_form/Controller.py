@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO: 
@@ -12,7 +12,7 @@
 # - 
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -28,8 +28,12 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 
+import ctypes
 
-# In[3]:
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
+
+
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -39,7 +43,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-# In[4]:
+# In[ ]:
 
 
 import sys
@@ -50,7 +54,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -66,7 +70,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
