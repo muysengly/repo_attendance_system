@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -141,7 +141,7 @@ cameras = get_list_camera_devices()
 attendance = []
 
 
-# In[13]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -202,7 +202,7 @@ class Window(Ui_MainWindow, QMainWindow):
                         self.listView_attd.model().insertRow(self.listView_attd.model().rowCount())
                         self.listView_attd.model().setData(self.listView_attd.model().index(self.listView_attd.model().rowCount() - 1), database[np.argmax(scores)][0])
                         self.listView_attd.scrollToBottom()
-                        attendance.append([database[np.argmax(scores)][0], f"{time.strftime("%H:%M:%S")}"])
+                        attendance.append([database[np.argmax(scores)][0], f"{time.strftime('%H:%M:%S')}"])
                         cv2.imwrite(f"{path_depth}log/log_{group_name}_{database[np.argmax(scores)][0]}_{date.today().strftime('%Y%m%d')}{time.strftime('%H%M%S')}.jpg", frame)
 
                 else:

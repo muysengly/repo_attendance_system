@@ -33,13 +33,13 @@
 
 ---
 
-## Step 3: Download And Install Python 3.12
+## Step 3: Download And Install Python 3.11
 
-### 3.1. Download Python 3.12
+### 3.1. Download Python 3.11
 
-- **Link**: https://www.python.org/ftp/python/3.12.9/python-3.12.9-amd64.exe
+- **Link**: https://www.python.org/ftp/python/
 
-### 3.2. Install Python 3.12
+### 3.2. Install Python 3.11
 
 ![alt text](resource/asset/002.png)
 
@@ -49,14 +49,14 @@
 
 ### 4.1. Run Bat File To Install Required Libraries
 
-- Run a file with name: `setup.bat`
+- **Run**: `setup.bat`
 
 **NOTE**: if you have problem with `setup.bat`, please contact me
 
 ---
 
-## Step 5: Run The Project
+## Step 5: Run Application
 
-### 5.1. Run The Project
+### 5.1. Run Application
 
-- **Run**: `python Main.py`
+- **Run**: `runs.vbs`
