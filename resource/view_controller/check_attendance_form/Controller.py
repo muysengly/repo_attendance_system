@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -34,7 +34,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis
@@ -53,7 +53,7 @@ from datetime import date
 import csv
 
 
-# In[4]:
+# In[ ]:
 
 
 import sys
@@ -64,14 +64,14 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[6]:
+# In[ ]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -79,21 +79,21 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[7]:
+# In[ ]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[8]:
+# In[ ]:
 
 
 database = db.read_name_emb1_emb2(group_name)
 # database
 
 
-# In[9]:
+# In[ ]:
 
 
 # pickle.dump(70, open(path_depth + "resource/variable/_threshold.pkl", "wb"))
@@ -101,7 +101,7 @@ threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "r
 # threshold
 
 
-# In[10]:
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -116,7 +116,7 @@ def compare_faces_cosine(emb1, emb2):
 # similarity
 
 
-# In[11]:
+# In[ ]:
 
 
 def get_list_camera_devices():
@@ -135,7 +135,7 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
-# In[12]:
+# In[ ]:
 
 
 attendance = []
@@ -216,7 +216,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[14]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -271,14 +271,7 @@ def on_button_back_clicked():
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
 
-
 app.exec_()
 app = None
 cap.release()
-
-
-# In[ ]:
-
-
-
 
