@@ -1,4 +1,7 @@
-@REM Change directory to C:\
+@echo off
+
+
+@REM Change working directory to C:\
 cd C:\
 
 
