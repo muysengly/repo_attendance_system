@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO: 
@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -27,13 +27,14 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 import ctypes
 
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[ ]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -43,7 +44,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-# In[ ]:
+# In[4]:
 
 
 import sys
@@ -54,7 +55,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -83,7 +84,7 @@ win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 _name = ""  # previous name of the selected item
 
 
-def f_add():
+def on_button_add_click():
     win.listView_group.clearSelection()
 
     text = win.lineEdit_group_name.text()
@@ -100,21 +101,21 @@ def f_add():
     win.lineEdit_group_name.clear()
 
 
-win.pushButton_add.clicked.connect(f_add)
-win.lineEdit_group_name.returnPressed.connect(f_add)
+win.pushButton_add.clicked.connect(on_button_add_click)
+win.lineEdit_group_name.returnPressed.connect(on_button_add_click)
 
 
-def on_double_clicked():
+def on_listview_double_click():
     global _name
     if win.listView_group.selectedIndexes():
         seleted = win.listView_group.selectedIndexes()[0]
         _name = seleted.data()
 
 
-win.listView_group.doubleClicked.connect(on_double_clicked)
+win.listView_group.doubleClicked.connect(on_listview_double_click)
 
 
-def on_data_changed():
+def on_listview_data_changed():
     if win.listView_group.selectedIndexes():
         selected = win.listView_group.selectedIndexes()[0]
 
@@ -131,10 +132,10 @@ def on_data_changed():
             db.update_table(_name, selected.data().strip().upper())
 
 
-win.listView_group.model().dataChanged.connect(on_data_changed)
+win.listView_group.model().dataChanged.connect(on_listview_data_changed)
 
 
-def context_menu_event(point):
+def on_listview_right_click_context_menu(point):
 
     index = win.listView_group.indexAt(point)
     if index.isValid():
@@ -149,7 +150,7 @@ def context_menu_event(point):
 
 
 win.listView_group.setContextMenuPolicy(Qt.CustomContextMenu)
-win.listView_group.customContextMenuRequested.connect(context_menu_event)
+win.listView_group.customContextMenuRequested.connect(on_listview_right_click_context_menu)
 
 
 def on_button_back_clicked():

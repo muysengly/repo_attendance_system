@@ -117,7 +117,9 @@ win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add_person.png"))
 _name = ""
 
 
-def on_button_add_clicked():
+def on_button_add_click():
+
+    win.listView_name.clearSelection()
 
     text = win.lineEdit_name.text()
     if text is not None:
@@ -134,21 +136,21 @@ def on_button_add_clicked():
     win.lineEdit_name.setFocus()
 
 
-win.pushButton_add.clicked.connect(on_button_add_clicked)
-win.lineEdit_name.returnPressed.connect(on_button_add_clicked)
+win.pushButton_add.clicked.connect(on_button_add_click)
+win.lineEdit_name.returnPressed.connect(on_button_add_click)
 
 
-def on_listview_double_clicked():
+def on_listview_double_click():
     global _name
     if win.listView_name.selectedIndexes():
         seleted = win.listView_name.selectedIndexes()[0]
         _name = seleted.data()
 
 
-win.listView_name.doubleClicked.connect(on_listview_double_clicked)
+win.listView_name.doubleClicked.connect(on_listview_double_click)
 
 
-def on_data_changed():
+def on_listview_data_changed():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
 
@@ -165,7 +167,7 @@ def on_data_changed():
             db.update_face_name(group_name, _name, selected.data().strip().upper())
 
 
-win.listView_name.model().dataChanged.connect(on_data_changed)
+win.listView_name.model().dataChanged.connect(on_listview_data_changed)
 
 
 def on_listview_single_clicked():
