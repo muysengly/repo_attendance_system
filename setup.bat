@@ -4,13 +4,8 @@
 pip install opencv-python insightface onnxruntime pyqt5
 
 
-echo.
-echo.
-echo Dependencies installed successfully.
-echo.
-echo.
-echo Please run "run.bat" to start the application.
-echo.
-echo.
+@REM copy a file c:\att/resource/utility/attendance  system.ink to desktop
+copy "C:\repo_attendance_system-main\resource\utility\Attendance System.lnk" "%USERPROFILE%\Desktop\Attendance System.lnk"
+
 
 pause
