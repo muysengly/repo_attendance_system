@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -33,7 +33,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -45,7 +45,7 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[4]:
+# In[ ]:
 
 
 import sys
@@ -56,7 +56,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -76,13 +76,14 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
 win = Window()
 
-win.label_version.setText("Version: 2.0.2")
+version = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
+win.label_version.setText(f"Version: {version}")
 
 win.pushButton_check_attendance.setIcon(QIcon(f"{path_depth}resource/asset/face-scanner.png"))
 win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.png"))
@@ -117,7 +118,8 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 
 
 def on_click_update_button():
-    QMessageBox.information(win, "Update", "This feature is not implemented yet. \nPlease check back later!.")
+    # QMessageBox.information(win, "Update", "This feature is not implemented yet. \nPlease check back later!.")
+    pickle.dump("2.0.2", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
 
 
 win.pushButton_check_update.clicked.connect(on_click_update_button)
@@ -125,4 +127,12 @@ win.pushButton_check_update.clicked.connect(on_click_update_button)
 
 app.exec_()
 app = None
+
+
+# In[ ]:
+
+
+# write a text file
+# with open(path_depth + "resource/variable/_version.txt", "w") as f:
+#     f.write("2.0.2")
 
