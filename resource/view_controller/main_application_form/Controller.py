@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[8]:
+# In[2]:
 
 
 import os
@@ -33,7 +33,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[9]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -47,7 +47,7 @@ import requests
 import zipfile
 
 
-# In[10]:
+# In[4]:
 
 
 import sys
@@ -58,7 +58,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[11]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -124,10 +124,11 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 def on_click_update_button():
 
     try:
-        git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt", timeout=10).text
+        headers = {"Accept": "application/vnd.github.v3.raw"}
+        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt", headers=headers).text
         git_version_int = list(map(int, git_version_string.split(".")))
 
-        if git_version_int > version_int:  # Note: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
+        if git_version_int > version_int:  # NOTE: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
             reply = QMessageBox.question(win, "Update Available", f"Version {git_version_string} is available. \nDo you want to update?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
@@ -179,4 +180,39 @@ app.exec_()
 app = None
 if os.path.exists("tmp.zip"):
     os.remove("tmp.zip")
+
+
+# In[7]:
+
+
+git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt", timeout=10).text
+
+
+# In[ ]:
+
+
+
+
+
+# In[8]:
+
+
+import requests
+
+url = "https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt"
+headers = {"Accept": "application/vnd.github.v3.raw"}
+content = requests.get(url, headers=headers).text
+print(content)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
