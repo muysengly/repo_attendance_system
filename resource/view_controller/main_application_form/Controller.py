@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[7]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[8]:
 
 
 import os
@@ -33,7 +33,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[3]:
+# In[9]:
 
 
 from View import Ui_MainWindow
@@ -47,7 +47,7 @@ import requests
 import zipfile
 
 
-# In[4]:
+# In[10]:
 
 
 import sys
@@ -58,7 +58,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[11]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -78,7 +78,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -132,8 +132,11 @@ def on_click_update_button():
 
             if reply == QMessageBox.Yes:
 
-                response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
-                total_size = int(response.headers.get("content-length", 0))
+                for _ in range(10):  # retry up to 10 times
+                    response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
+                    total_size = int(response.headers.get("content-length", 0))
+                    if total_size > 0:
+                        break
 
                 if total_size > 0:
                     progress = QProgressDialog("Downloading update...", "Cancel", 0, 100, win)
