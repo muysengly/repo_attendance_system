@@ -22,17 +22,17 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
 
-
-# In[3]:
-
-
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
+import ctypes
 
-# In[4]:
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
+
+
+# In[3]:
 
 
 from insightface.app import FaceAnalysis  # NOTE: this library need to import first
@@ -48,7 +48,7 @@ import pickle
 import numpy as np
 
 
-# In[5]:
+# In[4]:
 
 
 import sys
@@ -59,14 +59,14 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[6]:
+# In[5]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[7]:
+# In[6]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -74,14 +74,14 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[8]:
+# In[7]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[9]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -100,7 +100,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[10]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -325,17 +325,19 @@ def on_button_take_photo_1_clicked():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
         win.hide()
+
+        pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+
         os.system("python " + path_depth + "resource/view_controller/take_photo_form/Controller.py")
 
         photo = pickle.load(open(path_depth + "resource/variable/_photo.pkl", "rb"))
 
-        db.create_image_1_from_array(group_name, selected.data(), photo)
-        db.create_emb_1(group_name, selected.data(), fa.get(photo)[0].embedding)
-
-
-        _image = cv2.resize(photo, (win.label_image_1.width(), win.label_image_1.height()))
-        q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
-        win.label_image_1.setPixmap(q_pixmap)
+        if photo is not None:
+            db.create_image_1_from_array(group_name, selected.data(), photo)
+            db.create_emb_1(group_name, selected.data(), fa.get(photo)[0].embedding)
+            _image = cv2.resize(photo, (win.label_image_1.width(), win.label_image_1.height()))
+            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
+            win.label_image_1.setPixmap(q_pixmap)
 
         win.show()
 
@@ -347,16 +349,21 @@ def on_button_take_photo_2_clicked():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
         win.hide()
+
+        pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+
         os.system("python " + path_depth + "resource/view_controller/take_photo_form/Controller.py")
 
         photo = pickle.load(open(path_depth + "resource/variable/_photo.pkl", "rb"))
 
-        db.create_image_2_from_array(group_name, selected.data(), photo)
-        db.create_emb_2(group_name, selected.data(), fa.get(photo)[0].embedding)
+        if photo is not None:
 
-        _image = cv2.resize(photo, (win.label_image_2.width(), win.label_image_2.height()))
-        q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
-        win.label_image_2.setPixmap(q_pixmap)
+            db.create_image_2_from_array(group_name, selected.data(), photo)
+            db.create_emb_2(group_name, selected.data(), fa.get(photo)[0].embedding)
+
+            _image = cv2.resize(photo, (win.label_image_2.width(), win.label_image_2.height()))
+            q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
+            win.label_image_2.setPixmap(q_pixmap)
 
         win.show()
 
