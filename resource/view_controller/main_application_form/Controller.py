@@ -33,7 +33,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[ ]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -122,33 +122,53 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 
 
 def on_click_update_button():
+
     git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt").text
     git_version_int = list(map(int, git_version_string.split(".")))
 
-    if git_version_int > version_int:
+    if git_version_int > version_int:  # Note: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
+
         reply = QMessageBox.question(win, "Update Available", f"Version {git_version_string} is available. \nDo you want to update?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
 
-            # download the latest version from GitHub
             url = f"https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip"
-            response = requests.get(url)
-            if response.status_code == 200:
+            response = requests.get(url, stream=True)
+            total_size = int(response.headers.get("content-length", 0))
+            progress = QProgressDialog("Downloading update...", "Cancel", 0, 100, win)
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setMinimumSize(400, 100)
+            progress.setWindowTitle("Update in progress")
+
+            progress.setFont(progress.font().setPointSize(12) or progress.font())
+
+            progress.setValue(0)
+
+            if total_size > 0:
+                downloaded = 0
                 with open("tmp.zip", "wb") as f:
-                    f.write(response.content)
+                    for data in response.iter_content(1024):
+                        if progress.wasCanceled():
+                            response.close()
+                            os.remove("tmp.zip")
+                            QMessageBox.warning(win, "Cancelled", "Update cancelled.")
+                            return
+                        f.write(data)
+                        downloaded += len(data)
+                        percent = int(downloaded * 100 / total_size)
+                        progress.setValue(percent)
+                progress.setValue(100)
 
-            # extract the downloaded zip file
-            with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
-                zip_ref.extractall("c:\\")
+                # extract the downloaded zip file
+                with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
+                    zip_ref.extractall("c:\\")
 
-            # remove zip file
-            os.remove("tmp.zip")
+                # remove zip file
+                os.remove("tmp.zip")
 
-            # show message box to inform the user
-            QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
-
-            sys.exit(0)
-
-
+                # show message box to inform the user
+                QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
+            else:
+                QMessageBox.warning(win, "Download Error", "Failed to download the update. \nPlease try again later.")
     else:
         QMessageBox.information(win, "No Update", "You are already using the latest version.")
 
@@ -158,43 +178,4 @@ win.pushButton_check_update.clicked.connect(on_click_update_button)
 
 app.exec_()
 app = None
-
-
-# In[ ]:
-
-
-
-
-
-# In[7]:
-
-
-version_string = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
-version_int = list(map(int, version_string.split(".")))
-version_int
-
-
-# In[8]:
-
-
-git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt").text
-
-git_version_int = list(map(int, git_version_string.split(".")))
-
-git_version_int
-
-
-# In[9]:
-
-
-git_version_int > version_int
-
-
-# In[10]:
-
-
-aaa = [2,4,4]
-bbb = [2,3,3]
-
-aaa > bbb
 
