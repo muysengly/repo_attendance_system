@@ -28,3 +28,6 @@ setup_online.bat
 setup_dev.bat
 run_dev.bat
 readme.ipynb
+
+resource/utility/models/buffalo_sc.zip
+resource/utility/test/
