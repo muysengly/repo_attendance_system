@@ -339,6 +339,8 @@ def on_button_take_photo_1_clicked():
             q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
             win.label_image_1.setPixmap(q_pixmap)
 
+        pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
+
         win.show()
 
 
@@ -364,6 +366,8 @@ def on_button_take_photo_2_clicked():
             _image = cv2.resize(photo, (win.label_image_2.width(), win.label_image_2.height()))
             q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
             win.label_image_2.setPixmap(q_pixmap)
+
+        pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
         win.show()
 
