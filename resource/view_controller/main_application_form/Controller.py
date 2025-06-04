@@ -123,54 +123,50 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 
 def on_click_update_button():
 
-    git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt").text
-    git_version_int = list(map(int, git_version_string.split(".")))
+    try:
+        git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt", timeout=10).text
+        git_version_int = list(map(int, git_version_string.split(".")))
 
-    if git_version_int > version_int:  # Note: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
+        if git_version_int > version_int:  # Note: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
+            reply = QMessageBox.question(win, "Update Available", f"Version {git_version_string} is available. \nDo you want to update?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-        reply = QMessageBox.question(win, "Update Available", f"Version {git_version_string} is available. \nDo you want to update?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+            if reply == QMessageBox.Yes:
 
-            url = f"https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip"
-            response = requests.get(url, stream=True)
-            total_size = int(response.headers.get("content-length", 0))
-            progress = QProgressDialog("Downloading update...", "Cancel", 0, 100, win)
-            progress.setWindowModality(Qt.WindowModal)
-            progress.setMinimumSize(400, 100)
-            progress.setWindowTitle("Update in progress")
+                response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
+                total_size = int(response.headers.get("content-length", 0))
 
-            progress.setFont(progress.font().setPointSize(12) or progress.font())
+                if total_size > 0:
+                    progress = QProgressDialog("Downloading update...", "Cancel", 0, 100, win)
+                    progress.setWindowModality(Qt.WindowModal)
+                    progress.setMinimumSize(400, 100)
+                    progress.setWindowTitle("Update in progress")
+                    progress.setValue(0)
+                    downloaded = 0
+                    with open("tmp.zip", "wb") as f:
+                        for data in response.iter_content(1024):
+                            if progress.wasCanceled():
+                                response.close()
+                                QMessageBox.warning(win, "Cancelled", "Update cancelled.")
+                                return
+                            f.write(data)
+                            downloaded += len(data)
+                            percent = int(downloaded * 100 / total_size)
+                            progress.setValue(percent)
+                    progress.setValue(100)
 
-            progress.setValue(0)
+                    # extract the downloaded zip file
+                    with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
+                        zip_ref.extractall("c:\\")
 
-            if total_size > 0:
-                downloaded = 0
-                with open("tmp.zip", "wb") as f:
-                    for data in response.iter_content(1024):
-                        if progress.wasCanceled():
-                            response.close()
-                            os.remove("tmp.zip")
-                            QMessageBox.warning(win, "Cancelled", "Update cancelled.")
-                            return
-                        f.write(data)
-                        downloaded += len(data)
-                        percent = int(downloaded * 100 / total_size)
-                        progress.setValue(percent)
-                progress.setValue(100)
+                    # show message box to inform the user
+                    QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
+                else:
+                    QMessageBox.warning(win, "Download Error", "Failed to download the update. \nPlease try again later.")
+        else:
+            QMessageBox.information(win, "No Update", "You are already using the latest version.")
 
-                # extract the downloaded zip file
-                with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
-                    zip_ref.extractall("c:\\")
-
-                # remove zip file
-                os.remove("tmp.zip")
-
-                # show message box to inform the user
-                QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
-            else:
-                QMessageBox.warning(win, "Download Error", "Failed to download the update. \nPlease try again later.")
-    else:
-        QMessageBox.information(win, "No Update", "You are already using the latest version.")
+    except requests.RequestException as e:
+        QMessageBox.critical(win, "Error", "No Internet Connection!")
 
 
 win.pushButton_check_update.clicked.connect(on_click_update_button)
@@ -178,4 +174,6 @@ win.pushButton_check_update.clicked.connect(on_click_update_button)
 
 app.exec_()
 app = None
+if os.path.exists("tmp.zip"):
+    os.remove("tmp.zip")
 
