@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -43,9 +43,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import pickle
+import requests
+import zipfile
 
 
-# In[ ]:
+# In[4]:
 
 
 import sys
@@ -56,7 +58,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -82,8 +84,10 @@ class Window(Ui_MainWindow, QMainWindow):
 app = QApplication([])
 win = Window()
 
-version = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
-win.label_version.setText(f"Version: {version}")
+# open(path_depth + "resource/variable/_version.txt", "w").write("1.0.2")
+version_string = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
+version_int = list(map(int, version_string.split(".")))
+win.label_version.setText(f"Version: {version_string}")
 
 win.pushButton_check_attendance.setIcon(QIcon(f"{path_depth}resource/asset/face-scanner.png"))
 win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.png"))
@@ -118,8 +122,35 @@ win.pushButton_check_attendance.clicked.connect(on_check_attendance_button_click
 
 
 def on_click_update_button():
-    # QMessageBox.information(win, "Update", "This feature is not implemented yet. \nPlease check back later!.")
-    pickle.dump("2.0.2", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
+    git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt").text
+    git_version_int = list(map(int, git_version_string.split(".")))
+
+    if git_version_int > version_int:
+        reply = QMessageBox.question(win, "Update Available", f"Version {git_version_string} is available. \nDo you want to update?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+
+            # download the latest version from GitHub
+            url = f"https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip"
+            response = requests.get(url)
+            if response.status_code == 200:
+                with open("tmp.zip", "wb") as f:
+                    f.write(response.content)
+
+            # extract the downloaded zip file
+            with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
+                zip_ref.extractall("c:\\")
+
+            # remove zip file
+            os.remove("tmp.zip")
+
+            # show message box to inform the user
+            QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
+
+            sys.exit(0)
+
+
+    else:
+        QMessageBox.information(win, "No Update", "You are already using the latest version.")
 
 
 win.pushButton_check_update.clicked.connect(on_click_update_button)
@@ -132,7 +163,38 @@ app = None
 # In[ ]:
 
 
-# write a text file
-# with open(path_depth + "resource/variable/_version.txt", "w") as f:
-#     f.write("2.0.2")
+
+
+
+# In[7]:
+
+
+version_string = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
+version_int = list(map(int, version_string.split(".")))
+version_int
+
+
+# In[8]:
+
+
+git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt").text
+
+git_version_int = list(map(int, git_version_string.split(".")))
+
+git_version_int
+
+
+# In[9]:
+
+
+git_version_int > version_int
+
+
+# In[10]:
+
+
+aaa = [2,4,4]
+bbb = [2,3,3]
+
+aaa > bbb
 
