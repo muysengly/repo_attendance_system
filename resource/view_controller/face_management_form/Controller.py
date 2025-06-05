@@ -81,7 +81,7 @@ face_names = db.read_face_names(group_name)  # read the database from the sqlite
 # face_names
 
 
-# In[8]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -95,12 +95,12 @@ class Window(Ui_MainWindow, QMainWindow):
 
         self.listView_name.setModel(QStringListModel(face_names))
 
-        self.label_group_name.setText('Manage Faces in "' + group_name + '"')
+        self.label_group_name.setText('Face Management in "' + group_name + '"')
 
         self.show()
 
 
-# In[ ]:
+# In[9]:
 
 
 app = QApplication([])
@@ -199,7 +199,7 @@ def on_listview_single_clicked():
 win.listView_name.selectionModel().selectionChanged.connect(on_listview_single_clicked)
 
 
-def context_menu_event_name(point):
+def on_listview_right_click_context_menu(point):
     if win.listView_name.selectedIndexes():
         index = win.listView_name.indexAt(point)
         if index.isValid():
@@ -219,7 +219,7 @@ def context_menu_event_name(point):
 
 
 win.listView_name.setContextMenuPolicy(Qt.CustomContextMenu)
-win.listView_name.customContextMenuRequested.connect(context_menu_event_name)
+win.listView_name.customContextMenuRequested.connect(on_listview_right_click_context_menu)
 
 
 def on_button_upload_image_1_clicked():

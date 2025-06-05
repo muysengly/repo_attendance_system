@@ -181,38 +181,3 @@ app = None
 if os.path.exists("tmp.zip"):
     os.remove("tmp.zip")
 
-
-# In[7]:
-
-
-git_version_string = requests.get("https://raw.githubusercontent.com/muysengly/repo_attendance_system/refs/heads/main/resource/variable/_version.txt", timeout=10).text
-
-
-# In[ ]:
-
-
-
-
-
-# In[8]:
-
-
-import requests
-
-url = "https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt"
-headers = {"Accept": "application/vnd.github.v3.raw"}
-content = requests.get(url, headers=headers).text
-print(content)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-

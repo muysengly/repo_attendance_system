@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -27,6 +27,7 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
+os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 import ctypes
 
@@ -50,14 +51,14 @@ import pickle
 import numpy as np
 
 
-# In[8]:
+# In[4]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[ ]:
+# In[5]:
 
 
 def get_list_camera_devices():
