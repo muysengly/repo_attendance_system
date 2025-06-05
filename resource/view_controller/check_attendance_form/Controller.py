@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -34,7 +34,7 @@ import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
 
 
-# In[ ]:
+# In[3]:
 
 
 from insightface.app import FaceAnalysis
@@ -53,7 +53,7 @@ from datetime import date
 import csv
 
 
-# In[ ]:
+# In[4]:
 
 
 import sys
@@ -64,14 +64,14 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[ ]:
+# In[6]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -79,21 +79,21 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[ ]:
+# In[7]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[ ]:
+# In[8]:
 
 
 database = db.read_name_emb1_emb2(group_name)
 # database
 
 
-# In[ ]:
+# In[9]:
 
 
 # pickle.dump(70, open(path_depth + "resource/variable/_threshold.pkl", "wb"))
@@ -101,7 +101,7 @@ threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "r
 # threshold
 
 
-# In[ ]:
+# In[10]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -116,7 +116,7 @@ def compare_faces_cosine(emb1, emb2):
 # similarity
 
 
-# In[ ]:
+# In[11]:
 
 
 def get_list_camera_devices():
@@ -135,13 +135,13 @@ def get_list_camera_devices():
 cameras = get_list_camera_devices()
 
 
-# In[ ]:
+# In[12]:
 
 
 attendance = []
 
 
-# In[ ]:
+# In[13]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -216,7 +216,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[14]:
 
 
 cap = cv2.VideoCapture(0)
