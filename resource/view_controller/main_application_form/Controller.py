@@ -58,7 +58,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
