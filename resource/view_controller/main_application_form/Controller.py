@@ -58,7 +58,7 @@ from resource.utility.Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -92,6 +92,7 @@ win.label_version.setText(f"Version: {version_string}")
 win.pushButton_check_attendance.setIcon(QIcon(f"{path_depth}resource/asset/face-scanner.png"))
 win.pushButton_manage.setIcon(QIcon(f"{path_depth}resource/asset/settings-gears.png"))
 win.pushButton_check_update.setIcon(QIcon(f"{path_depth}resource/asset/refresh.png"))
+win.pushButton_database.setIcon(QIcon(f"{path_depth}resource/asset/database.png"))
 
 
 def on_manage_button_clicked():
@@ -174,6 +175,15 @@ def on_click_update_button():
 
 
 win.pushButton_check_update.clicked.connect(on_click_update_button)
+
+
+def on_click_database_button():
+    win.hide()
+    os.system("python " + path_depth + "resource/view_controller/attendance_database_form/Controller.py")
+    win.show()
+
+
+win.pushButton_database.clicked.connect(on_click_database_button)
 
 
 app.exec_()

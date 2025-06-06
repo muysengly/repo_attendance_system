@@ -81,7 +81,7 @@ face_names = db.read_face_names(group_name)  # read the database from the sqlite
 # face_names
 
 
-# In[ ]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):

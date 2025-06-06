@@ -18,7 +18,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
+    <width>770</width>
     <height>420</height>
    </size>
   </property>
@@ -35,9 +35,9 @@
    <widget class="QPushButton" name="pushButton_check_attendance">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>470</x>
       <y>220</y>
-      <width>240</width>
+      <width>151</width>
       <height>40</height>
      </rect>
     </property>
@@ -48,13 +48,13 @@
      </font>
     </property>
     <property name="text">
-     <string> Check Attendance</string>
+     <string> Attendance</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_group_name">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>160</x>
       <y>220</y>
       <width>300</width>
       <height>40</height>
@@ -72,7 +72,7 @@
      <rect>
       <x>20</x>
       <y>220</y>
-      <width>180</width>
+      <width>140</width>
       <height>40</height>
      </rect>
     </property>
@@ -92,9 +92,9 @@
    <widget class="QPushButton" name="pushButton_manage">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>340</y>
-      <width>240</width>
+      <x>630</x>
+      <y>220</y>
+      <width>130</width>
       <height>40</height>
      </rect>
     </property>
@@ -259,7 +259,7 @@
      <rect>
       <x>10</x>
       <y>290</y>
-      <width>751</width>
+      <width>750</width>
       <height>20</height>
      </rect>
     </property>
@@ -272,12 +272,30 @@
      <rect>
       <x>10</x>
       <y>170</y>
-      <width>751</width>
+      <width>750</width>
       <height>20</height>
      </rect>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_database">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>340</y>
+      <width>140</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Database</string>
     </property>
    </widget>
   </widget>

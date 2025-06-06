@@ -21,6 +21,7 @@ resource/variable/_photo.jpg
 .gitignore
 log/*.jpg
 database.sqlite
+attendance.sqlite
 
 setup_offline_make.bat
 setup_offline.bat

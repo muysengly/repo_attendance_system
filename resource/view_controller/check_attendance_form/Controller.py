@@ -45,12 +45,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+import csv
 import cv2
 import pickle
-import numpy as np
 import time
+
+import numpy as np
 from datetime import date
-import csv
 
 
 # In[4]:
@@ -62,6 +63,11 @@ sys.path.append(path_depth)
 from resource.utility.Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
+
+
+from resource.utility.AttendanceDatabase import AttendanceDatabase
+
+att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 
 
 # In[5]:
@@ -138,10 +144,11 @@ cameras = get_list_camera_devices()
 # In[12]:
 
 
-attendance = []
+data = []
+cap = cv2.VideoCapture(0)
 
 
-# In[13]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -181,34 +188,39 @@ class Window(Ui_MainWindow, QMainWindow):
                 box = face.bbox.astype(int)
 
                 if (box[2] - box[0]) < 100 or (box[3] - box[1]) < 100:  # skip small faces
-                    cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="Too small!", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                    cv2.putText(img=frame, text="Too small!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
                     continue
 
                 if len(database) == 0:
-                    cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="No database!", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                    cv2.putText(img=frame, text="No database!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                    continue
+
+                # check if face out of screen
+                if box[0] - 20 < 0 or box[1] - 20 < 0 or box[2] + 20 > frame.shape[1] or box[3] + 20 > frame.shape[0]:
                     continue
 
                 scores = [max(compare_faces_cosine(face.embedding, data[1]) if data[1] is not None else 0, compare_faces_cosine(face.embedding, data[2]) if data[2] is not None else 0) for data in database]
 
                 if np.max(scores) > threshold / 100:
 
-                    cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 255, 0), thickness=2)
-                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {database[np.argmax(scores)][0]}", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
-                    cv2.putText(img=frame, text="Attended!", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
+                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 255, 0), thickness=2)
+                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
+                    cv2.putText(img=frame, text="Attended!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
                     if database[np.argmax(scores)][0] not in self.listView_attd.model().stringList():
                         self.listView_attd.model().insertRow(self.listView_attd.model().rowCount())
                         self.listView_attd.model().setData(self.listView_attd.model().index(self.listView_attd.model().rowCount() - 1), database[np.argmax(scores)][0])
                         self.listView_attd.scrollToBottom()
-                        attendance.append([database[np.argmax(scores)][0], f"{time.strftime('%H:%M:%S')}"])
+                        data.append([database[np.argmax(scores)][0], f"{time.strftime('%H:%M:%S')}"])
+                        att_db.add_data(group_name, database[np.argmax(scores)][0], date.today().strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"))
                         cv2.imwrite(f"{path_depth}log/log_{group_name}_{database[np.argmax(scores)][0]}_{date.today().strftime('%Y%m%d')}{time.strftime('%H%M%S')}.jpg", frame)
 
                 else:
-                    cv2.rectangle(img=frame, pt1=(box[0], box[1]), pt2=(box[2], box[3]), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {database[np.argmax(scores)][0]}", org=(box[0], box[1] - 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="Unknown!", org=(box[0], box[3] + 20), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                    cv2.putText(img=frame, text="Unknown!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
 
         # frame to the label
         _image = cv2.resize(frame, (self.label_camera.width(), self.label_camera.height()))
@@ -219,7 +231,6 @@ class Window(Ui_MainWindow, QMainWindow):
 # In[14]:
 
 
-cap = cv2.VideoCapture(0)
 app = QApplication([])
 
 win = Window()
@@ -232,16 +243,23 @@ win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 
 def save_attendance():
-    if len(attendance) > 0:
+    if data.__len__() == 0:
+        QMessageBox.warning(win, "Warning", "No attendance data to save.")
+    else:
 
         options = QFileDialog.Options()
-        file_path, _ = QFileDialog.getSaveFileName(win, "Save Attendance", f"attd_{group_name}_{date.today().strftime('%Y%m%d')}{time.strftime('%H%M%S')}", "CSV Files (*.csv)", options=options)
+        file_path, _ = QFileDialog.getSaveFileName(win, "Save Attendance", f"attd_{group_name}_{date.today().strftime('%Y%m%d')}_{time.strftime('%H%M%S')}", "CSV Files (*.csv)", options=options)
         if file_path:
-            with open(file_path, "w", newline="", encoding="utf-8") as file:
-                writer = csv.writer(file)
-                writer.writerow(["Name", "Time"])
-                for item in attendance:
-                    writer.writerow(item)
+            try:
+                with open(file_path, "w", newline="", encoding="utf-8") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(["Name", "Date", "Time"])  # Adjust headers as needed
+                    for row in data:
+                        writer.writerow([row[0], date.today().strftime("%Y-%m-%d"), row[1]])  # Save name, date, and time
+
+                QMessageBox.information(win, "Success", f"Data saved to: \n{file_path}")
+            except Exception as e:
+                QMessageBox.critical(win, "Error", f"Failed to save data!")
 
 
 win.pushButton_save.clicked.connect(save_attendance)
