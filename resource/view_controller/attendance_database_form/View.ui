@@ -364,13 +364,13 @@
    <zorder>label_2</zorder>
    <zorder>pushButton_save</zorder>
    <zorder>tableWidget</zorder>
-   <zorder>pushButton_back</zorder>
    <zorder>label_3</zorder>
    <zorder>pushButton_clear</zorder>
    <zorder>label_4</zorder>
    <zorder>label_5</zorder>
    <zorder>pushButton_query</zorder>
    <zorder>comboBox_group_name</zorder>
+   <zorder>pushButton_back</zorder>
   </widget>
  </widget>
  <tabstops>
