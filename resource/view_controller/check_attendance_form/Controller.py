@@ -29,9 +29,11 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
-import ctypes
 
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
+if os.name == "nt":
+    import ctypes
+
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
 
 # In[3]:
@@ -148,7 +150,7 @@ data = []
 cap = cv2.VideoCapture(0)
 
 
-# In[ ]:
+# In[13]:
 
 
 class Window(Ui_MainWindow, QMainWindow):

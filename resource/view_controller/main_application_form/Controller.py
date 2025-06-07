@@ -12,25 +12,36 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
+import sys
+
 
 
 path_depth = "../../../"  # adjust the current working directory
+
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+    sys.path.append(path_depth)
+else:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), path_depth)))
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
-import ctypes
 
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")  # work for Windows taskbar
+
+
+
+if os.name == "nt":
+    import ctypes
+
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
 
 # In[3]:
@@ -47,12 +58,9 @@ import requests
 import zipfile
 
 
-# In[4]:
+# In[ ]:
 
 
-import sys
-
-sys.path.append(path_depth)
 from resource.utility.Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
