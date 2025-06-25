@@ -24,9 +24,10 @@ path_depth = "../../../"  # adjust the current working directory
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
-    sys.path.append(path_depth)
-else:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), path_depth)))
+
+
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
+
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
@@ -57,18 +58,12 @@ import zipfile
 # In[ ]:
 
 
-sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
-
-
-# In[ ]:
-
-
 from Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[6]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -88,7 +83,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[7]:
 
 
 app = QApplication([])

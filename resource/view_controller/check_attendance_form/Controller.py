@@ -24,9 +24,9 @@ path_depth = "../../../"  # adjust the current working directory
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
-    sys.path.append(path_depth)
-else:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), path_depth)))
+
+
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
@@ -63,8 +63,6 @@ from datetime import date
 
 # In[ ]:
 
-
-sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 from Database import DataBase
 

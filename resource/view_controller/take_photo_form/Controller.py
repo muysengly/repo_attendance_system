@@ -12,12 +12,11 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
 import sys
-
 
 
 path_depth = "../../../"  # adjust the current working directory
@@ -25,9 +24,9 @@ path_depth = "../../../"  # adjust the current working directory
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
-    sys.path.append(path_depth)
-else:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), path_depth)))
+
+
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
@@ -81,6 +80,7 @@ def get_list_camera_devices():
         index += 1
     return cameras
 
+
 cameras = get_list_camera_devices()
 
 
@@ -88,6 +88,7 @@ cameras = get_list_camera_devices()
 
 
 cap = cv2.VideoCapture(0)
+
 
 class Window(Ui_MainWindow, QMainWindow):
     def __init__(self):
@@ -151,6 +152,7 @@ win = Window()
 win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 win.pushButton_take_photo.setIcon(QIcon(f"{path_depth}resource/asset/photo-camera.png"))
 
+
 def take_photo():
     _, frame = cap.read()
     frame = cv2.flip(frame, 1)
@@ -178,8 +180,6 @@ def on_button_back_clicked():
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
-
-
 
 
 app.exec_()
