@@ -16,13 +16,18 @@
 
 
 import os
+import sys
+
 
 
 path_depth = "../../../"  # adjust the current working directory
+
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
     os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
-
+    sys.path.append(path_depth)
+else:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), path_depth)))
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
@@ -48,13 +53,12 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[4]:
+# In[ ]:
 
 
-import sys
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
-sys.path.append(path_depth)
-from resource.utility.Database import DataBase
+from Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
 

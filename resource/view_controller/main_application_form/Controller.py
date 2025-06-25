@@ -19,7 +19,6 @@ import os
 import sys
 
 
-
 path_depth = "../../../"  # adjust the current working directory
 
 if "__file__" not in globals():  # check if running in Jupyter Notebook
@@ -33,9 +32,6 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
-
 
 
 if os.name == "nt":
@@ -61,7 +57,13 @@ import zipfile
 # In[ ]:
 
 
-from resource.utility.Database import DataBase
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
+
+
+# In[ ]:
+
+
+from Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
 

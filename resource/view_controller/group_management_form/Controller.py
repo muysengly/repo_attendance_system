@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -55,7 +55,9 @@ from PyQt5.QtWidgets import *
 # In[ ]:
 
 
-from resource.utility.Database import DataBase
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
+
+from Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
 

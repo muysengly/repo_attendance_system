@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -41,7 +41,7 @@ if os.name == "nt":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
 
-# In[ ]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -58,12 +58,18 @@ import datetime
 # In[ ]:
 
 
-from resource.utility.AttendanceDatabase import AttendanceDatabase
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
+
+
+# In[ ]:
+
+
+from AttendanceDatabase import AttendanceDatabase
 
 att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -77,7 +83,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])

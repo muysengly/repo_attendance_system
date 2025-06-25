@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -41,7 +41,7 @@ if os.name == "nt":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
 
-# In[ ]:
+# In[3]:
 
 
 from insightface.app import FaceAnalysis  # NOTE: this library need to import first
@@ -60,20 +60,21 @@ import numpy as np
 # In[ ]:
 
 
-from resource.utility.Database import DataBase
+sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
+
+from Database import DataBase
 
 db = DataBase(path_depth + "database.sqlite")
 
 
-
-# In[ ]:
+# In[5]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(640, 640))
 
 
-# In[ ]:
+# In[6]:
 
 
 # pickle.dump("001 DEMO", open(path_depth + "resource/variable/_group_name.pkl", "wb"))
@@ -81,14 +82,14 @@ group_name = pickle.load(open(path_depth + "resource/variable/_group_name.pkl", 
 # group_name
 
 
-# In[ ]:
+# In[7]:
 
 
 face_names = db.read_face_names(group_name)  # read the database from the sqlite file
 # face_names
 
 
-# In[ ]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -107,7 +108,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[9]:
 
 
 app = QApplication([])
