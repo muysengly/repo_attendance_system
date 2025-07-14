@@ -32,6 +32,7 @@ readme.ipynb
 
 resource/utility/models/buffalo_sc.zip
 resource/utility/test/
+resource/view_controller/_take_photo_form/
 
 **/**.ui
 **/**.ipynb
