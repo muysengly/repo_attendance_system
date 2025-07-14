@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -57,7 +57,7 @@ import pickle
 import numpy as np
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -102,6 +102,10 @@ class Window(Ui_MainWindow, QMainWindow):
         self.listView_name.setModel(QStringListModel(face_names))
 
         self.label_group_name.setText('Face Management in "' + group_name + '"')
+
+
+        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
 
         self.show()
 

@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -61,7 +61,7 @@ import numpy as np
 from datetime import date
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -152,7 +152,7 @@ data = []
 cap = cv2.VideoCapture(0)
 
 
-# In[13]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -162,6 +162,9 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Check Attendance Form")
+
+        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
 
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.label_gtr_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/gtr_logo.png").scaled(self.label_gtr_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
@@ -227,8 +230,13 @@ class Window(Ui_MainWindow, QMainWindow):
                     cv2.putText(img=frame, text="Unknown!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
 
         # frame to the label
+        # _image = cv2.resize(frame, (self.label_camera.width(), self.label_camera.height()))
+        # q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
+        # self.label_camera.setPixmap(q_pixmap)
         _image = cv2.resize(frame, (self.label_camera.width(), self.label_camera.height()))
-        q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
+        _image = cv2.cvtColor(_image, cv2.COLOR_BGR2RGB)
+        q_image = QImage(_image.data, _image.shape[1], _image.shape[0], _image.strides[0], QImage.Format_RGB888)
+        q_pixmap = QPixmap.fromImage(q_image)
         self.label_camera.setPixmap(q_pixmap)
 
 

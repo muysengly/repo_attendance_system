@@ -1,7 +1,7 @@
 @echo off
 
 @REM install dependencies
-pip install opencv-python insightface onnxruntime pyqt5
+pip install pyqt5 opencv-python insightface onnxruntime
 
 
 @REM Copy shortcut to desktop

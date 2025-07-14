@@ -32,3 +32,5 @@ readme.ipynb
 
 resource/utility/models/buffalo_sc.zip
 resource/utility/test/
+
+**/**.ui

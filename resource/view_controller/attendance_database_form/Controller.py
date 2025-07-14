@@ -63,7 +63,7 @@ from AttendanceDatabase import AttendanceDatabase
 att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -73,6 +73,10 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Attendance Database Form")
+
+
+        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
 
         self.show()
 

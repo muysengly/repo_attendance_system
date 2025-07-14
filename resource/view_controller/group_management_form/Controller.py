@@ -12,7 +12,7 @@
 # - 
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -51,7 +51,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -59,7 +59,7 @@ from Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -70,7 +70,10 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Group Management Form")
 
-        self.listView_group.setModel(QStringListModel(db.read_table()))    
+        self.listView_group.setModel(QStringListModel(db.read_table()))  
+
+        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)  
 
         self.show()
 

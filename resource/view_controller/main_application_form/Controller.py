@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -55,7 +55,7 @@ import requests
 import zipfile
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -63,7 +63,7 @@ from Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[6]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -71,7 +71,7 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
         self.setWindowTitle("Main Form")
 
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
@@ -80,10 +80,13 @@ class Window(Ui_MainWindow, QMainWindow):
         self.comboBox_group_name.clear()
         self.comboBox_group_name.addItems(db.read_table())
 
+
+
+
         self.show()
 
 
-# In[7]:
+# In[6]:
 
 
 app = QApplication([])
