@@ -29,12 +29,6 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
 if os.name == "nt":
     import ctypes
 
@@ -72,7 +66,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
-        self.setWindowTitle("Main Form")
+        self.setWindowTitle("Angkor Inference")
 
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.label_gtr_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/gtr_logo.png").scaled(self.label_gtr_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))

@@ -12,7 +12,7 @@
 # - 
 
 
-# In[1]:
+# In[2]:
 
 
 import os
@@ -27,11 +27,6 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
-
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 
 if os.name == "nt":
@@ -52,7 +47,7 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -60,7 +55,7 @@ from Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -68,8 +63,8 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
-        self.setWindowTitle("Management Form")
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowTitle("Angkor Inference")
 
         self.comboBox_group_names.clear()
         self.comboBox_group_names.addItems(db.read_table())

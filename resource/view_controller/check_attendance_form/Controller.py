@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -27,12 +27,6 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
-
-
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 
 
 if os.name == "nt":
@@ -152,7 +146,7 @@ data = []
 cap = cv2.VideoCapture(0)
 
 
-# In[ ]:
+# In[13]:
 
 
 class Window(Ui_MainWindow, QMainWindow):

@@ -29,12 +29,6 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
 if os.name == "nt":
     import ctypes
 
@@ -71,9 +65,8 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
-        self.setWindowTitle("Attendance Database Form")
-
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowTitle("Angkor Inference")
 
         self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
         self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
@@ -176,7 +169,7 @@ def on_button_save_csv_clicked():
         return
 
     options = QFileDialog.Options()
-    file_path, _ = QFileDialog.getSaveFileName(win, "Save Attendance", f"att_{group_name}_{now.strftime('%Y%m%d_%H%M%S')}", "CSV Files (*.csv)", options=options)
+    file_path, _ = QFileDialog.getSaveFileName(win, "Save Attendance", f"attd_{group_name}_{now.strftime('%Y%m%d_%H%M%S')}", "CSV Files (*.csv)", options=options)
     if file_path:
         try:
             with open(file_path, "w", newline="", encoding="utf-8") as file:

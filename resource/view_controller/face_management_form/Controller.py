@@ -29,12 +29,6 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
 if os.name == "nt":
     import ctypes
 
@@ -87,7 +81,7 @@ face_names = db.read_face_names(group_name)  # read the database from the sqlite
 # face_names
 
 
-# In[8]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -96,8 +90,8 @@ class Window(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
 
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
-        self.setWindowTitle("Face Management Form")
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowTitle("Angkor Inference")
 
         self.listView_name.setModel(QStringListModel(face_names))
 
